@@ -1,0 +1,43 @@
+table.guitar_neck {
+    background-color: bisque;
+}
+
+table.guitar_neck td {
+    width: 120px;
+    height: 55px;
+    border-right: gray solid 3px;
+    border-left: gray solid 3px;
+    background-image: url('data:image/gif;base64,R0lGODdhAgAIAOMQAB0aFSUfDyooKTUxJkA6Gk9EJFlPLFRRSGtnZnNpUHRvXIF3bY+Ifp6Xh7Gunby4rywAAAAAAgAIAAAEDHAERV5xpiW20BFABAA7');
+    background-repeat: repeat-x;
+    background-position: center;
+}
+
+div.note {
+    width: 40px;
+    height: 40px;
+    background: darkblue;
+    border-radius: 20px;
+    margin: auto;
+}
+
+div.degree {
+    text-align: center;
+    vertical-align: middle;
+    line-height: 40px;
+    color: white;
+    font-size: x-large;
+    font-weight: bold;
+
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;
+}
+
+div.reference {
+    background: darkred;
+}
+
+div.highlight {
+    background: darkgreen;
+}
