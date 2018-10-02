@@ -1,8 +1,8 @@
-table.guitar_neck {
+table.fretboard {
     background-color: bisque;
 }
 
-table.guitar_neck td {
+table.fretboard td {
     width: 120px;
     height: 55px;
     border-right: gray solid 3px;
@@ -34,10 +34,6 @@ div.degree {
     user-select: none;
 }
 
-div.reference {
-    background: darkred;
-}
-
 div.highlight {
-    background: darkgreen;
+    background: darkred;
 }
