@@ -77,12 +77,18 @@ $(document).ready(function() {
     };
 
     let minor_pentatonic = [ 0, 3, 5, 7, 10 ];
-    //let major_pentatonic = [ 0, 2, 4, 7, 9 ];
     $("#min_pent_6").html(generate_fretboard(0, 4, minor_pentatonic));
     $("#min_pent_4").html(generate_fretboard(2, 4, minor_pentatonic));
-    $("#min_pent_2").html(generate_fretboard(4, 4, minor_pentatonic));
+    $("#min_pent_2").html(generate_fretboard(4, 5, minor_pentatonic));
     $("#min_pent_5").html(generate_fretboard(7, 4, minor_pentatonic));
     $("#min_pent_3").html(generate_fretboard(9, 4, minor_pentatonic));
+
+    let major_pentatonic = [ 0, 2, 4, 7, 9 ];
+    $("#maj_pent_6").html(generate_fretboard(-1, 4, major_pentatonic));
+    $("#maj_pent_4").html(generate_fretboard(1, 5, major_pentatonic));
+    $("#maj_pent_2").html(generate_fretboard(4, 4, major_pentatonic));
+    $("#maj_pent_5").html(generate_fretboard(6, 4, major_pentatonic));
+    $("#maj_pent_3").html(generate_fretboard(9, 4, major_pentatonic));
 
     let notes = $(".note");
     notes.not(".reference").find(".degree").hide();
