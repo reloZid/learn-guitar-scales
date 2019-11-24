@@ -1,0 +1,15 @@
+{
+  "name": "learn-guitar-scales",
+  "scripts": {
+    "start": "parcel index.html"
+  },
+  "dependencies": {
+    "bootstrap": "^4.3.1",
+    "jquery": "^3.4.1",
+    "popper.js": "^1.16.0"
+  },
+  "devDependencies": {
+    "@fortawesome/fontawesome-free": "^5.11.2",
+    "parcel-bundler": "^1.12.4"
+  }
+}
