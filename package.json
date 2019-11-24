@@ -1,7 +1,7 @@
 {
   "name": "learn-guitar-scales",
   "scripts": {
-    "start": "parcel index.html"
+    "start": "parcel src/index.html"
   },
   "dependencies": {
     "bootstrap": "^4.3.1",
@@ -10,6 +10,7 @@
   },
   "devDependencies": {
     "@fortawesome/fontawesome-free": "^5.11.2",
-    "parcel-bundler": "^1.12.4"
+    "parcel-bundler": "^1.12.4",
+    "typescript": "^3.7.2"
   }
 }
