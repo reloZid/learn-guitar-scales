@@ -59,6 +59,6 @@ export class Note {
     }
 
     getScaleDegree(): ScaleDegree {
-        return new ScaleDegree(this.value - Note.fromName(settings.scale.root).value);
+        return ScaleDegree.fromValue(this.value - Note.fromName(settings.scale.root).value);
     }
 }
