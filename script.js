@@ -1,57 +1,50 @@
-const noteE1 = 16; // C0 being zero
-
 let settings = {
   fretboard: {
-    tuning: [
-      noteE1 + 24,
-      noteE1 + 19,
-      noteE1 + 15,
-      noteE1 + 10,
-      noteE1 + 5,
-      noteE1,
-    ],
+    tuning: ['E', 'B', 'G', 'D', 'A', 'E'],
     firstFret: 7,
     lastFret: 12,
     showOpenStrings: true,
   },
   scale: {
-    rootNote: noteE1,
-    degrees: [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11],
+    root: 'C',
+    degrees: ['1', 'b3', '4', '5', 'b7'],
+    showDegrees: false,
   },
 };
 
 const style = {
-  scaleDegrees: {
-    0: {name: 'R', color: 'black'},
-    1: {name: 'b2', color: 'darkred'},
-    2: {name: '2', color: 'firebrick'},
-    3: {name: 'b3', color: 'darkgreen'},
-    4: {name: '3', color: 'limegreen'},
-    5: {name: '4', color: 'gold'},
-    6: {name: 'b5', color: 'skyblue'},
-    7: {name: '5', color: 'darkblue'},
-    8: {name: 'b6', color: 'purple'},
-    9: {name: '6', color: 'mediumpurple'},
-    10: {name: 'b7', color: 'teal'},
-    11: {name: '7', color: 'turquoise'},
-  },
   fretboard: {
     stringSpacing: 55,
     fretSpacing: 120,
     markerSize: 30,
     noteSize: 40,
     openNoteSize: 30,
-  }
+  },
+  scaleDegreeColors: {
+    0: 'black',
+    1: 'darkred',
+    2: 'firebrick',
+    3: 'darkgreen',
+    4: 'limegreen',
+    5: 'gold',
+    6: 'skyblue',
+    7: 'darkblue',
+    8: 'purple',
+    9: 'mediumpurple',
+    10: 'teal',
+    11: 'turquoise',
+  },
 };
 
 function updateFretboard() {
   let fretboardHtml = '<table>';
 
   for (let stringIndex = 0; stringIndex < settings.fretboard.tuning.length; stringIndex++) {
+    const openNoteValue = noteNameToValue(settings.fretboard.tuning[stringIndex]);
     fretboardHtml += '<tr>';
 
     for (let fretIndex = settings.fretboard.firstFret; fretIndex < settings.fretboard.lastFret + 1; fretIndex++) {
-      const noteValue = settings.fretboard.tuning[stringIndex] + fretIndex;
+      const noteValue = norm(openNoteValue + fretIndex);
       let fretHtml = `<div class="note" noteValue="${noteValue}" />`;
 
       const hasSingleMarker = [3, 5, 7, 9].includes(fretIndex % 12) && stringIndex === 2;
@@ -61,7 +54,6 @@ function updateFretboard() {
       }
 
       if (fretIndex === settings.fretboard.firstFret && settings.fretboard.showOpenStrings) {
-        const openNoteValue = settings.fretboard.tuning[stringIndex];
         fretHtml += `<div class="open-note" noteValue="${openNoteValue}" />`;
       }
 
@@ -75,7 +67,6 @@ function updateFretboard() {
 
   const fretboard = $('#fretboard');
   fretboard.html(fretboardHtml);
-
   fretboard.find('td')
     .css('width', style.fretboard.fretSpacing)
     .css('height', style.fretboard.stringSpacing);
@@ -99,7 +90,6 @@ function updateFretboard() {
     .css('left', -style.fretboard.openNoteSize)
     .css('top', style.fretboard.stringSpacing / 2 - style.fretboard.openNoteSize / 2)
     .css('line-height', (style.fretboard.openNoteSize - 3) + 'px');
-
   if (settings.fretboard.showOpenStrings) {
     fretboard.css('margin-left', style.fretboard.openNoteSize);
   }
@@ -108,21 +98,90 @@ function updateFretboard() {
 }
 
 function updateScale() {
-  $('.note, .open-note').each(function() {
-    const noteValue = parseInt($(this).attr('noteValue'));
-    let scaleDegree = (noteValue - settings.scale.rootNote) % 12;
-    if (scaleDegree < 0) {
-      scaleDegree += 12;
-    }
+  const scaleDegreeValues = settings.scale.degrees.map(scaleDegreeName => scaleDegreeNameToValue(scaleDegreeName));
 
-    if (settings.scale.degrees.includes(scaleDegree)) {
-      $(this).text(style.scaleDegrees[scaleDegree].name);
-      $(this).css('background-color', style.scaleDegrees[scaleDegree].color);
+  $('.note, .open-note').each(function () {
+    const noteValue = parseInt($(this).attr('noteValue'));
+    const scaleDegreeValue = noteValueToScaleDegreeValue(noteValue);
+
+    if (scaleDegreeValues.includes(scaleDegreeValue)) {
+      if (settings.scale.showDegrees) {
+        $(this).text(scaleDegreeValueToName(scaleDegreeValue))
+      } else {
+        $(this).text(noteValueToName(noteValue));
+      }
+
+      $(this).css('background-color', style.scaleDegreeColors[scaleDegreeValue]);
       $(this).show();
     } else {
       $(this).hide();
     }
   });
+}
+
+function noteValueToName(noteValue) {
+  const scaleDegreeName = scaleDegreeValueToName(noteValueToScaleDegreeValue(noteValue));
+
+  if (scaleDegreeName === undefined) {
+    return undefined;
+  }
+
+  const noteNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+  const rootNameIndex = noteNames.indexOf(settings.scale.root.charAt(0));
+  const nameIndexOffset = parseInt(scaleDegreeName.charAt(scaleDegreeName.length - 1)) - 1;
+  const naturalNoteName = noteNames[(rootNameIndex + nameIndexOffset) % 7];
+  let naturalNoteValue = noteNameToValue(naturalNoteName);
+
+  if (naturalNoteValue > noteValue) {
+    naturalNoteValue -= 12;
+  }
+
+  const sharps = noteValue - naturalNoteValue;
+  const flats = naturalNoteValue - noteValue + 12;
+
+  return naturalNoteName + ((sharps < flats) ? '#'.repeat(sharps) : 'b'.repeat(flats));
+}
+
+function noteValueToScaleDegreeValue(noteValue) {
+  return norm(noteValue - noteNameToValue(settings.scale.root));
+}
+
+function noteNameToValue(noteName) {
+  const noteValues = {'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11};
+  let noteValue = noteValues[noteName.charAt(0)];
+
+  for (let i = 1; i < noteName.length; i++) {
+    if (noteName.charAt(i) === 'b') noteValue--;
+    if (noteName.charAt(i) === '#') noteValue++;
+  }
+
+  return norm(noteValue);
+}
+
+function scaleDegreeValueToName(scaleDegreeValue) {
+  for (let i = 0; i < settings.scale.degrees.length; i++) {
+    if (scaleDegreeValue === scaleDegreeNameToValue(settings.scale.degrees[i])) {
+      return settings.scale.degrees[i];
+    }
+  }
+
+  return undefined;
+}
+
+function scaleDegreeNameToValue(scaleDegreeName) {
+  const degreeValues = {'1': 0, '2': 2, '3': 4, '4': 5, '5': 7, '6': 9, '7': 11};
+  let degreeValue = degreeValues[scaleDegreeName.charAt(scaleDegreeName.length - 1)];
+
+  for (let i = 0; i < scaleDegreeName.length - 1; i++) {
+    if (scaleDegreeName.charAt(i) === 'b') degreeValue--;
+    if (scaleDegreeName.charAt(i) === '#') degreeValue++;
+  }
+
+  return norm(degreeValue);
+}
+
+function norm(value) {
+  return value >= 0 ? value % 12 : value % 12 + 12;
 }
 
 $(document).ready(function () {
