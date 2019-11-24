@@ -1,10 +1,9 @@
-table.fretboard {
+#fretboard table {
     background-color: bisque;
 }
 
-table.fretboard td {
-    width: 120px;
-    height: 55px;
+#fretboard td {
+    position: relative;
     border-right: gray solid 3px;
     border-left: gray solid 3px;
     background-image: url('data:image/gif;base64,R0lGODdhAgAIAOMQAB0aFSUfDyooKTUxJkA6Gk9EJFlPLFRRSGtnZnNpUHRvXIF3bY+Ifp6Xh7Gunby4rywAAAAAAgAIAAAEDHAERV5xpiW20BFABAA7');
@@ -12,28 +11,20 @@ table.fretboard td {
     background-position: center;
 }
 
-div.note {
-    width: 40px;
-    height: 40px;
-    background: darkblue;
-    border-radius: 20px;
-    margin: auto;
+#fretboard div.marker {
+    z-index: 0;
+    position: absolute;
+    background: gray;
 }
 
-div.degree {
+#fretboard div.note, #fretboard div.open-note {
+    z-index: 1;
+    position: absolute;
+    color: white;
     text-align: center;
     vertical-align: middle;
-    line-height: 40px;
-    color: white;
     font-size: x-large;
     font-weight: bold;
-
-    -webkit-user-select: none;
-    -moz-user-select: none;
-    -ms-user-select: none;
     user-select: none;
 }
 
-div.highlight {
-    background: darkred;
-}
