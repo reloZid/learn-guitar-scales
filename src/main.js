@@ -5,11 +5,14 @@ import './style.css'
 import 'bootstrap'
 import $ from 'jquery'
 
-import {settings, style} from './global'
+import {scales, settings, style} from './global'
 import {Note} from './note';
 import {ScaleDegree} from './scale-degree';
 
 function updateFretboard() {
+  settings.fretboard.firstFret = parseInt($('#select-position').val());
+  settings.fretboard.lastFret = settings.fretboard.firstFret + 4;
+
   let fretboardHtml = '<table>';
 
   for (let stringIndex = 0; stringIndex < settings.fretboard.tuning.length; stringIndex++) {
@@ -71,6 +74,9 @@ function updateFretboard() {
 }
 
 function updateScale() {
+  settings.scale.degrees = scales[$('#select-scale').val()];
+  settings.scale.root = $('#select-root').val();
+
   const scaleDegreeValues = settings.scale.degrees.map(name => ScaleDegree.fromName(name).getValue());
 
   $('.note, .open-note').each(function () {
@@ -93,5 +99,8 @@ function updateScale() {
 }
 
 $(document).ready(function () {
+  $('#select-scale').change(updateFretboard);
+  $('#select-root').change(updateFretboard);
+  $('#select-position').change(updateFretboard);
   updateFretboard();
 });

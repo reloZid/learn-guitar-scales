@@ -7,7 +7,73 @@
 </head>
 <body>
 
-<div id="fretboard"></div>
+<div class="container">
+    <div class="row">
+        <div class="col-lg-6">
+            <h1>Learn Guitar Scales</h1>
+            <form>
+                <div class="form-group">
+                    <label for="select-scale">Scale</label>
+                    <select class="form-control" id="select-scale">
+                        <option value="major-arpeggio">Major Arpeggio</option>
+                        <option value="minor-arpeggio">Minor Arpeggio</option>
+                        <option value="major-pentatonic">Major Pentatonic</option>
+                        <option value="minor-pentatonic">Minor Pentatonic</option>
+                        <option value="ionian">Ionian</option>
+                        <option value="dorian">Dorian</option>
+                        <option value="phrygian">Phrygian</option>
+                        <option value="lydian">Lydian</option>
+                        <option value="mixolydian">Mixolydian</option>
+                        <option value="aeolian">Aeolian</option>
+                        <option value="locrian">Locrian</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="select-root">Root Note</label>
+                    <select class="form-control" id="select-root">
+                        <option>C</option>
+                        <option>G</option>
+                        <option>D</option>
+                        <option>A</option>
+                        <option>E</option>
+                        <option>B</option>
+                        <option>F#</option>
+                        <option>C#</option>
+                        <option>F</option>
+                        <option>Bb</option>
+                        <option>Eb</option>
+                        <option>Ab</option>
+                        <option>Db</option>
+                        <option>Gb</option>
+                        <option>Cb</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="select-position">Position</label>
+                    <select class="form-control" id="select-position">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                    </select>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <div class="row">
+        <div id="fretboard"></div>
+    </div>
+</div>
+
 <script src="main.js"></script>
 
 </body>

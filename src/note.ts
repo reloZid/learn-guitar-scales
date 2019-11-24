@@ -1,4 +1,4 @@
-import {norm, settings} from "./global";
+import {settings} from "./global";
 import {ScaleDegree} from "./scale-degree";
 
 export class Note {
@@ -29,7 +29,7 @@ export class Note {
     }
 
     private constructor(value: number) {
-        this.value = norm(value);
+        this.value = value >= 0 ? value % 12 : value % 12 + 12;
     }
 
     add(halfsteps: number) {

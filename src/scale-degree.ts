@@ -1,4 +1,4 @@
-import {norm, settings} from "./global";
+import {settings} from "./global";
 
 export class ScaleDegree {
     private readonly value: number;
@@ -28,7 +28,7 @@ export class ScaleDegree {
     }
 
     private constructor(value: number) {
-        this.value = norm(value);
+        this.value = value >= 0 ? value % 12 : value % 12 + 12;
     }
 
     getValue(): number {
