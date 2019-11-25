@@ -20,23 +20,23 @@ export const style = {
         noteSize: 40,
         openNoteSize: 30,
     },
-    scaleDegreeColors: {
-        0: 'black',
-        1: 'darkred',
-        2: 'firebrick',
-        3: 'darkgreen',
-        4: 'limegreen',
-        5: 'gold',
-        6: 'skyblue',
-        7: 'darkblue',
-        8: 'purple',
-        9: 'mediumpurple',
-        10: 'teal',
-        11: 'turquoise',
-    },
+    scaleDegreeColors: [
+        'black',
+        'darkred',
+        'firebrick',
+        'darkgreen',
+        'limegreen',
+        'gold',
+        'skyblue',
+        'darkblue',
+        'purple',
+        'mediumpurple',
+        'teal',
+        'turquoise',
+    ],
 };
 
-export const scales = {
+export const scales: { [index: string]: string[] } = {
     'minor-pentatonic': ['1', 'b3', '4', '5', 'b7'],
     'major-pentatonic': ['1', '2', '3', '5', '6'],
     'minor-arpeggio': ['1', 'b3', '5'],
