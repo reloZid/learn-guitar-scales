@@ -1,4 +1,4 @@
-import {settings} from "./global";
+import {activeScale} from "./active-scale";
 import {ScaleDegree} from "./scale-degree";
 
 export class Note {
@@ -43,7 +43,7 @@ export class Note {
     getName(): string {
         const scaleDegreeName = this.getScaleDegree().getName();
         const noteNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
-        const rootNameIndex = noteNames.indexOf(settings.scale.root.charAt(0));
+        const rootNameIndex = noteNames.indexOf(activeScale.root.charAt(0));
         const nameIndexOffset = parseInt(scaleDegreeName.charAt(scaleDegreeName.length - 1)) - 1;
         const naturalNoteName = noteNames[(rootNameIndex + nameIndexOffset) % 7];
         let naturalNoteValue = Note.fromName(naturalNoteName).value;
@@ -59,6 +59,6 @@ export class Note {
     }
 
     getScaleDegree(): ScaleDegree {
-        return ScaleDegree.fromValue(this.value - Note.fromName(settings.scale.root).value);
+        return ScaleDegree.fromValue(this.value - Note.fromName(activeScale.root).value);
     }
 }

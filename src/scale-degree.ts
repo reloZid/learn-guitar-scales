@@ -1,7 +1,6 @@
-import {settings} from "./global";
+import {activeScale} from "./active-scale";
 
 export class ScaleDegree {
-    private readonly value: number;
 
     static fromValue(value: number): ScaleDegree {
         return new ScaleDegree(value);
@@ -27,6 +26,8 @@ export class ScaleDegree {
         return new ScaleDegree(degreeValue);
     }
 
+    private readonly value: number;
+
     private constructor(value: number) {
         this.value = value >= 0 ? value % 12 : value % 12 + 12;
     }
@@ -36,7 +37,7 @@ export class ScaleDegree {
     }
 
     getName(): string {
-        for (const scaleDegreeName of settings.scale.degrees) {
+        for (const scaleDegreeName of activeScale.degrees) {
             if (this.equals(ScaleDegree.fromName(scaleDegreeName))) {
                 return scaleDegreeName;
             }
