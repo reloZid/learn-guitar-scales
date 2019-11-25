@@ -14,6 +14,7 @@ const scales: { [index: string]: string[] } = {
     'mixolydian': ['1', '2', '3', '4', '5', '6', 'b7'],
     'aeolian': ['1', '2', 'b3', '4', '5', 'b6', 'b7'],
     'locrian': ['1', 'b2', 'b3', '4', 'b5', 'b6', 'b7'],
+    'chromatic': ['1', 'b2', '2', 'b3', '3', '4', 'b5', '5', 'b6', '6', 'b7', '7'],
 };
 
 export class Setup {
@@ -21,7 +22,7 @@ export class Setup {
 
     constructor(fretboard: Fretboard) {
         this.fretboard = fretboard;
-        $('.fretboard-setup').on('change', () => this.applySettings);
+        $('.fretboard-setup').on('change', () => this.applySettings());
         this.applySettings();
     }
 
