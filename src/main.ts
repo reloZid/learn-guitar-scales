@@ -5,3 +5,4 @@ import './style.css'
 import 'bootstrap'
 
 import './fretboard'
+import './setup'

@@ -1,22 +1,10 @@
 import $ from "jquery"
 
-import {scales, settings, style} from "./global";
+import {settings, style} from "./global";
 import {Note} from "./note";
 import {ScaleDegree} from "./scale-degree";
 
-$(function () {
-    $('.fretboard-setup').on('change', setupFretboard);
-    setupFretboard();
-});
-
-function setupFretboard() {
-    settings.fretboard.firstFret = parseInt(<string>$('#select-first-fret').val());
-    settings.fretboard.lastFret = parseInt(<string>$('#select-last-fret').val());
-    settings.fretboard.showOpenStrings = $('#check-open-strings').is(':checked');
-    settings.scale.degrees = scales[<string>$('#select-scale').val()];
-    settings.scale.root = <string>$('#select-root').val();
-    settings.scale.showDegrees = $('#check-show-degrees').is(':checked');
-
+export function setupFretboard() {
     generateFretboard();
     styleFretboard();
     setupScale();
