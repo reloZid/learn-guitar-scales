@@ -1,10 +1,11 @@
 #fretboard {
-    margin-top: 3em;
+    margin-top: 2em;
+    margin-bottom: 2em;
+    overflow-x: auto;
 }
 
 #fretboard table {
     background-color: bisque;
-    margin: auto;
 }
 
 #fretboard td {

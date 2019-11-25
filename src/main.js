@@ -10,8 +10,9 @@ import {Note} from './note';
 import {ScaleDegree} from './scale-degree';
 
 function updateFretboard() {
-  settings.fretboard.firstFret = parseInt($('#select-position').val());
-  settings.fretboard.lastFret = settings.fretboard.firstFret + 4;
+  settings.fretboard.firstFret = parseInt($('#select-first-fret').val());
+  settings.fretboard.lastFret = parseInt($('#select-last-fret').val());
+  settings.fretboard.showOpenStrings = $('#check-open-strings').is(':checked');
 
   let fretboardHtml = '<table>';
 
@@ -45,6 +46,7 @@ function updateFretboard() {
   fretboard.html(fretboardHtml);
   fretboard.find('td')
     .css('width', style.fretboard.fretSpacing)
+    .css('min-width', style.fretboard.fretSpacing)
     .css('height', style.fretboard.stringSpacing);
   fretboard.find('div.marker')
     .css('width', style.fretboard.markerSize)
@@ -67,7 +69,7 @@ function updateFretboard() {
     .css('top', style.fretboard.stringSpacing / 2 - style.fretboard.openNoteSize / 2)
     .css('line-height', (style.fretboard.openNoteSize - 3) + 'px');
   if (settings.fretboard.showOpenStrings) {
-    fretboard.css('margin-left', style.fretboard.openNoteSize);
+    fretboard.find('table').css('margin-left', style.fretboard.openNoteSize);
   }
 
   updateScale();
@@ -76,6 +78,7 @@ function updateFretboard() {
 function updateScale() {
   settings.scale.degrees = scales[$('#select-scale').val()];
   settings.scale.root = $('#select-root').val();
+  settings.scale.showDegrees = $('#check-show-degrees').is(':checked');
 
   const scaleDegreeValues = settings.scale.degrees.map(name => ScaleDegree.fromName(name).getValue());
 
@@ -101,6 +104,9 @@ function updateScale() {
 $(document).ready(function () {
   $('#select-scale').change(updateFretboard);
   $('#select-root').change(updateFretboard);
-  $('#select-position').change(updateFretboard);
+  $('#select-first-fret').change(updateFretboard);
+  $('#select-last-fret').change(updateFretboard);
+  $('#check-open-strings').change(updateFretboard);
+  $('#check-show-degrees').change(updateFretboard);
   updateFretboard();
 });
