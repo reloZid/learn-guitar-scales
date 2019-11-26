@@ -1,8 +1,8 @@
 import $ from "jquery";
-import {Fretboard} from "./fretboard";
-import {Scale} from "./scale";
-import {ScaleDegree} from "./scale-degree";
-import {Note} from "./note";
+import {Fretboard} from "../view/fretboard";
+import {Scale} from "../model/scale";
+import {ScaleDegree} from "../model/scale-degree";
+import {Note} from "../model/note";
 
 const scales: { [index: string]: string[] } = {
     'minor-pentatonic': ['1', 'b3', '4', '5', 'b7'],

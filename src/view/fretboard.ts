@@ -1,7 +1,7 @@
 import $ from "jquery"
 
-import {Note} from "./note";
-import {Scale} from "./scale";
+import {Note} from "../model/note";
+import {Scale} from "../model/scale";
 
 const tuning = ['E', 'B', 'G', 'D', 'A', 'E'];
 

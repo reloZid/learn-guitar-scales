@@ -5,8 +5,8 @@ import './style.css'
 import 'bootstrap'
 import $ from 'jquery'
 
-import {Fretboard} from "./fretboard";
-import {Setup} from "./setup";
+import {Fretboard} from "./view/fretboard";
+import {Setup} from "./controller/setup";
 
 $(function() {
     new Setup(new Fretboard());
