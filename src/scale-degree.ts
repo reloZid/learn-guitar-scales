@@ -1,52 +1,64 @@
-import {activeScale} from "./active-scale";
+import {Scale} from "./scale";
 
 export class ScaleDegree {
 
-    static fromValue(value: number): ScaleDegree {
-        return new ScaleDegree(value);
+    static fromValue(value: number, scale?: Scale): ScaleDegree {
+        if (value < 0 || value > 11) {
+            throw new TypeError('Invalid scale degree value!');
+        }
+
+        // try to use the same name as in the scale
+        if (scale) {
+            for (const scaleDegree of scale.degrees) {
+                if (scaleDegree.value === value) {
+                    return scaleDegree;
+                }
+            }
+        }
+
+        // otherwise use default name
+        const defaultNames: { [index: number]: string } = {
+            0: '1', 1: 'b2', 2: '2', 3: 'b3', 4: '3', 5: '4', 6: 'b5', 7: '5', 8: 'b6', 9: '6', 10: 'b7', 11: '7'
+        };
+        return new ScaleDegree(defaultNames[value]);
     }
 
     static fromName(name: string): ScaleDegree {
+        return new ScaleDegree(name);
+    }
+
+    private static isNameValid(name: string): boolean {
+        if (name.length < 1) {
+            return false;
+        }
+
+        const degreeNumber = parseInt(name.charAt(name.length - 1));
+        if (isNaN(degreeNumber) || degreeNumber < 1 || degreeNumber > 7) {
+            return false;
+        }
+
+        const degreeModifier = ['', 'b', 'bb', '#', '##'];
+        return degreeModifier.includes(name.substring(0, name.length - 1));
+    }
+
+    private static calcValue(name: string): number {
         const degreeValues: { [index: string]: number } = {'1': 0, '2': 2, '3': 4, '4': 5, '5': 7, '6': 9, '7': 11};
-        let degreeValue = degreeValues[name.charAt(name.length - 1)];
+        const degreeModifiers: { [index: string]: number } = {'': 0, 'b': -1, 'bb': -2, '#': 1, '##': 2};
+        const degreeValue = degreeValues[name.charAt(name.length - 1)];
+        const degreeModifier = degreeModifiers[name.substring(0, name.length - 1)];
+        return degreeValue + degreeModifier;
+    }
 
-        for (let i = 0; i < name.length - 1; i++) {
-            switch (name.charAt(i)) {
-                case 'b':
-                    degreeValue--;
-                    break;
-                case '#':
-                    degreeValue++;
-                    break;
-                default:
-                    throw new Error("Invalid scale degree name!");
-            }
+    readonly name: string;
+    readonly value: number;
+
+    private constructor(name: string) {
+        if (!ScaleDegree.isNameValid(name)) {
+            throw new TypeError('Invalid scale degree name!');
         }
 
-        return new ScaleDegree(degreeValue);
+        this.name = name;
+        this.value = ScaleDegree.calcValue(name);
     }
 
-    private readonly value: number;
-
-    private constructor(value: number) {
-        this.value = value >= 0 ? value % 12 : value % 12 + 12;
-    }
-
-    getValue(): number {
-        return this.value;
-    }
-
-    getName(): string {
-        for (const scaleDegreeName of activeScale.degrees) {
-            if (this.equals(ScaleDegree.fromName(scaleDegreeName))) {
-                return scaleDegreeName;
-            }
-        }
-
-        throw new Error("Scale degree name not known!");
-    }
-
-    equals(other: ScaleDegree) {
-        return this.value === other.value;
-    }
 }

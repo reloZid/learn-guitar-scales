@@ -1,6 +1,8 @@
 import $ from "jquery";
 import {Fretboard} from "./fretboard";
-import {activeScale} from "./active-scale";
+import {Scale} from "./scale";
+import {ScaleDegree} from "./scale-degree";
+import {Note} from "./note";
 
 const scales: { [index: string]: string[] } = {
     'minor-pentatonic': ['1', 'b3', '4', '5', 'b7'],
@@ -27,15 +29,15 @@ export class Setup {
     }
 
     private applySettings() {
-        activeScale.degrees = scales[<string>$('#select-scale').val()];
-        activeScale.root = <string>$('#select-root').val();
-
         this.fretboard.setup({
             firstFret: parseInt(<string>$('#select-first-fret').val()),
             lastFret: parseInt(<string>$('#select-last-fret').val()),
             openStrings: $('#check-open-strings').is(':checked'),
             showDegrees: $('#check-show-degrees').is(':checked'),
         });
-        this.fretboard.showScale();
+        this.fretboard.showScale(new Scale(
+            Note.fromName(<string>$('#select-root').val()),
+            scales[<string>$('#select-scale').val()].map(name => ScaleDegree.fromName(name))
+        ));
     }
 }

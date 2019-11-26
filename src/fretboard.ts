@@ -1,8 +1,7 @@
 import $ from "jquery"
 
 import {Note} from "./note";
-import {activeScale} from "./active-scale";
-import {ScaleDegree} from "./scale-degree";
+import {Scale} from "./scale";
 
 const tuning = ['E', 'B', 'G', 'D', 'A', 'E'];
 
@@ -58,8 +57,8 @@ export class Fretboard {
             fretboardHtml += '<tr>';
 
             for (let fretIndex = this.settings.firstFret; fretIndex < this.settings.lastFret + 1; fretIndex++) {
-                const note = openNote.add(fretIndex);
-                let fretHtml = `<div class="note" noteValue="${note.getValue()}" />`;
+                const note = Note.fromValue((openNote.value + fretIndex) % 12);
+                let fretHtml = `<div class="note" noteValue="${note.value}" />`;
 
                 const hasSingleMarker = [3, 5, 7, 9].includes(fretIndex % 12) && stringIndex === 2;
                 const hasDoubleMarker = fretIndex % 12 === 0 && (stringIndex === 1 || stringIndex === 3);
@@ -68,7 +67,7 @@ export class Fretboard {
                 }
 
                 if (fretIndex === this.settings.firstFret && this.settings.openStrings) {
-                    fretHtml += `<div class="note open-note" noteValue="${openNote.getValue()}" />`;
+                    fretHtml += `<div class="note open-note" noteValue="${openNote.value}" />`;
                 }
 
                 fretboardHtml += `<td>${fretHtml}</td>`;
@@ -112,22 +111,22 @@ export class Fretboard {
         }
     }
 
-    showScale() {
-        const scaleDegreeValues = activeScale.degrees.map(name => ScaleDegree.fromName(name).getValue());
+    showScale(scale: Scale) {
+        const noteValues = scale.notes.map(note => note.value);
         const showDegrees = this.settings.showDegrees;
 
         $('.note, .open-note').each(function () {
-            const note = Note.fromValue(parseInt(<string>$(this).attr('noteValue')));
-            const scaleDegree = note.getScaleDegree();
+            const noteValue = parseInt(<string>$(this).attr('noteValue'));
+            const index = noteValues.indexOf(noteValue);
 
-            if (scaleDegreeValues.includes(scaleDegree.getValue())) {
+            if (index >= 0) {
                 if (showDegrees) {
-                    $(this).text(scaleDegree.getName());
+                    $(this).text(scale.degrees[index].name);
                 } else {
-                    $(this).text(note.getName());
+                    $(this).text(scale.notes[index].name);
                 }
 
-                $(this).css('background-color', style.scaleDegreeColors[scaleDegree.getValue()]);
+                $(this).css('background-color', style.scaleDegreeColors[scale.degrees[index].value]);
                 $(this).show();
             } else {
                 $(this).hide();
