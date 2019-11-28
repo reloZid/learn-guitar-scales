@@ -12,101 +12,112 @@
 
     <div id="fretboard"></div>
 
-    <div id="setup">
-        <form>
-            <div class="form-group">
-                <label for="select-scale">Scale</label>
-                <select class="form-control fretboard-setup" id="select-scale">
-                    <option value="major-arpeggio">Major Arpeggio</option>
-                    <option value="minor-arpeggio">Minor Arpeggio</option>
-                    <option value="major-pentatonic">Major Pentatonic</option>
-                    <option value="minor-pentatonic" selected>Minor Pentatonic</option>
-                    <option value="ionian">Ionian</option>
-                    <option value="dorian">Dorian</option>
-                    <option value="phrygian">Phrygian</option>
-                    <option value="lydian">Lydian</option>
-                    <option value="mixolydian">Mixolydian</option>
-                    <option value="aeolian">Aeolian</option>
-                    <option value="locrian">Locrian</option>
-                    <option value="chromatic">Chromatic</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="select-root">Root Note</label>
-                <select class="form-control fretboard-setup" id="select-root">
-                    <option>C</option>
-                    <option>G</option>
-                    <option>D</option>
-                    <option selected>A</option>
-                    <option>E</option>
-                    <option>B</option>
-                    <option>F#</option>
-                    <option>C#</option>
-                    <option>F</option>
-                    <option>Bb</option>
-                    <option>Eb</option>
-                    <option>Ab</option>
-                    <option>Db</option>
-                    <option>Gb</option>
-                    <option>Cb</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="select-first-fret">First Fret</label>
-                <select class="form-control fretboard-setup" id="select-first-fret">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option selected>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option>8</option>
-                    <option>9</option>
-                    <option>10</option>
-                    <option>11</option>
-                    <option>12</option>
-                    <option>13</option>
-                    <option>14</option>
-                    <option>15</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <label for="select-last-fret">Last Fret</label>
-                <select class="form-control fretboard-setup" id="select-last-fret">
-                    <option>1</option>
-                    <option>2</option>
-                    <option>3</option>
-                    <option>4</option>
-                    <option>5</option>
-                    <option>6</option>
-                    <option>7</option>
-                    <option selected>8</option>
-                    <option>9</option>
-                    <option>10</option>
-                    <option>11</option>
-                    <option>12</option>
-                    <option>13</option>
-                    <option>14</option>
-                    <option>15</option>
-                </select>
-            </div>
-            <div class="form-group">
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input fretboard-setup" id="check-open-strings">
-                    <label class="form-check-label" for="check-open-strings">Include Open Strings</label>
+    <div id="drill" class="card" style="display: none">
+        <div class="card-body">
+            <h5 class="card-title">Drill</h5>
+            <div id="drill-text"></div>
+            <button type="submit" class="btn btn-primary" id="button-next">Next</button>
+        </div>
+    </div>
+
+    <div id="setup" class="card">
+        <div class="card-body">
+            <h5 class="card-title">Setup</h5>
+            <form>
+                <div class="form-group">
+                    <label for="select-scale">Scale</label>
+                    <select class="form-control fretboard-setup" id="select-scale">
+                        <option value="major-arpeggio">Major Arpeggio</option>
+                        <option value="minor-arpeggio">Minor Arpeggio</option>
+                        <option value="major-pentatonic">Major Pentatonic</option>
+                        <option value="minor-pentatonic" selected>Minor Pentatonic</option>
+                        <option value="ionian">Ionian</option>
+                        <option value="dorian">Dorian</option>
+                        <option value="phrygian">Phrygian</option>
+                        <option value="lydian">Lydian</option>
+                        <option value="mixolydian">Mixolydian</option>
+                        <option value="aeolian">Aeolian</option>
+                        <option value="locrian">Locrian</option>
+                        <option value="chromatic">Chromatic</option>
+                    </select>
                 </div>
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input fretboard-setup" id="check-show-degrees">
-                    <label class="form-check-label" for="check-show-degrees">Show Scale Degrees</label>
+                <div class="form-group">
+                    <label for="select-root">Root Note</label>
+                    <select class="form-control fretboard-setup" id="select-root">
+                        <option>C</option>
+                        <option>G</option>
+                        <option>D</option>
+                        <option selected>A</option>
+                        <option>E</option>
+                        <option>B</option>
+                        <option>F#</option>
+                        <option>C#</option>
+                        <option>F</option>
+                        <option>Bb</option>
+                        <option>Eb</option>
+                        <option>Ab</option>
+                        <option>Db</option>
+                        <option>Gb</option>
+                        <option>Cb</option>
+                    </select>
                 </div>
-            </div>
-            <button type="submit" class="btn btn-primary" style="min-width: 100px" id="button-start">Start</button>
-        </form>
+                <div class="form-group">
+                    <label for="select-first-fret">First Fret</label>
+                    <select class="form-control fretboard-setup" id="select-first-fret">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option selected>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                        <option>13</option>
+                        <option>14</option>
+                        <option>15</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label for="select-last-fret">Last Fret</label>
+                    <select class="form-control fretboard-setup" id="select-last-fret">
+                        <option>1</option>
+                        <option>2</option>
+                        <option>3</option>
+                        <option>4</option>
+                        <option>5</option>
+                        <option>6</option>
+                        <option>7</option>
+                        <option selected>8</option>
+                        <option>9</option>
+                        <option>10</option>
+                        <option>11</option>
+                        <option>12</option>
+                        <option>13</option>
+                        <option>14</option>
+                        <option>15</option>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input fretboard-setup" id="check-open-strings">
+                        <label class="form-check-label" for="check-open-strings">Include Open Strings</label>
+                    </div>
+                    <div class="form-check">
+                        <input type="checkbox" class="form-check-input fretboard-setup" id="check-show-degrees">
+                        <label class="form-check-label" for="check-show-degrees">Show Scale Degrees</label>
+                    </div>
+                </div>
+                <button type="submit" class="btn btn-primary" id="button-start">Start</button>
+            </form>
+        </div>
     </div>
 </div>
 
-<script src="main.ts"></script>
+<script src="controller/main.ts"></script>
 
 </body>
 </html>

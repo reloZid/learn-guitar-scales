@@ -1,8 +1,8 @@
 import $ from "jquery";
-import {Fretboard} from "../view/fretboard";
+import {FretboardSettings} from "./fretboard";
 import {Scale} from "../model/scale";
-import {ScaleDegree} from "../model/scale-degree";
 import {Note} from "../model/note";
+import {ScaleDegree} from "../model/scale-degree";
 
 const scales: { [index: string]: string[] } = {
     'minor-pentatonic': ['1', 'b3', '4', '5', 'b7'],
@@ -20,24 +20,42 @@ const scales: { [index: string]: string[] } = {
 };
 
 export class Setup {
-    private fretboard: Fretboard;
-
-    constructor(fretboard: Fretboard) {
-        this.fretboard = fretboard;
-        $('.fretboard-setup').on('change', () => this.applySettings());
-        this.applySettings();
+    constructor() {
+        $('#button-start').on('click', event => event.preventDefault());
     }
 
-    private applySettings() {
-        this.fretboard.setup({
+    onChange(callback: () => void) {
+        $('.fretboard-setup').on('change', callback);
+    }
+
+    onStart(callback: () => void) {
+        $('#button-start').on('click', callback);
+    }
+
+    show() {
+        $('#setup').show();
+    }
+
+    hide() {
+        $('#setup').hide();
+    }
+
+    get fretboardSettings(): FretboardSettings {
+        return {
             firstFret: parseInt(<string>$('#select-first-fret').val()),
             lastFret: parseInt(<string>$('#select-last-fret').val()),
             openStrings: $('#check-open-strings').is(':checked'),
-            showDegrees: $('#check-show-degrees').is(':checked'),
-        });
-        this.fretboard.showScale(new Scale(
+        }
+    }
+
+    get scale(): Scale {
+        return new Scale(
             Note.fromName(<string>$('#select-root').val()),
             scales[<string>$('#select-scale').val()].map(name => ScaleDegree.fromName(name))
-        ));
+        );
+    }
+
+    get showDegrees(): boolean {
+        return $('#check-show-degrees').is(':checked');
     }
 }

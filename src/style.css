@@ -1,3 +1,7 @@
+button {
+    min-width: 120px;
+}
+
 #fretboard {
     margin-top: 2em;
     margin-bottom: 2em;
@@ -9,22 +13,33 @@
 }
 
 #fretboard td {
+    z-index: 0;
     position: relative;
-    border-right: gray solid 3px;
-    border-left: gray solid 3px;
     background-image: url('data:image/gif;base64,R0lGODdhAgAIAOMQAB0aFSUfDyooKTUxJkA6Gk9EJFlPLFRRSGtnZnNpUHRvXIF3bY+Ifp6Xh7Gunby4rywAAAAAAgAIAAAEDHAERV5xpiW20BFABAA7');
     background-repeat: repeat-x;
     background-position: center;
+    border-right: gray solid 3px;
+    border-left: gray solid 3px;
+    padding: 0;
 }
 
 #fretboard div.marker {
-    z-index: 0;
+    z-index: 1;
     position: absolute;
     background: gray;
 }
 
-#fretboard div.note, #fretboard div.open-note {
-    z-index: 1;
+#fretboard div.note {
+    width: 100%;
+    height: 100%;
+}
+
+#fretboard div.open-note {
+    position: absolute;
+}
+
+#fretboard div.note-content {
+    z-index: 2;
     position: absolute;
     color: white;
     text-align: center;
@@ -34,3 +49,6 @@
     user-select: none;
 }
 
+#drill-text {
+    margin-bottom: 1em;
+}

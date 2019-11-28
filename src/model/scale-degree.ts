@@ -61,4 +61,17 @@ export class ScaleDegree {
         this.value = ScaleDegree.calcValue(name);
     }
 
+    get text() {
+        if (this.name == '1') {
+            return 'root';
+        }
+        const suffixes: { [index: string]: string } = {
+            '2': 'nd', '3': 'rd', '4': 'th', '5': 'th', '6': 'th', '7': 'th'
+        };
+        let text = this.name
+            .replace('b', '\u266D')
+            .replace('#', '\u266F');
+        return text + suffixes[this.name.charAt(this.name.length - 1)];
+    }
+
 }

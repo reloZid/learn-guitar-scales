@@ -9,6 +9,10 @@ export class Scale {
     constructor(root: Note, degrees: ScaleDegree[]) {
         this.root = root;
         this.degrees = degrees;
-        this.notes = degrees.map(degree => Note.fromValue((root.value + degree.value) % 12, this));
+        this.notes = degrees.map(degree => this.note(degree));
+    }
+
+    note(degree: ScaleDegree): Note {
+        return Note.fromValue((this.root.value + degree.value) % 12, this);
     }
 }
