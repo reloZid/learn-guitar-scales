@@ -102,9 +102,16 @@ export class FretboardData {
     }
 
     private static getPositions(firstFret?: number, lastFret?: number): FretboardPosition[] {
+        if (firstFret === undefined) {
+            firstFret = 0;
+        }
+        if (lastFret === undefined) {
+            lastFret = 24;
+        }
+
         let positions = [];
         for (let string = 0; string < tuning.length; string++) {
-            for (let fret = (firstFret || 0); fret <= (lastFret || 24); fret++) {
+            for (let fret = firstFret; fret <= lastFret; fret++) {
                 positions.push({string, fret});
             }
         }

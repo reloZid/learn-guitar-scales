@@ -41,8 +41,14 @@ export class DrillMarkDegrees {
 
     private validate(): boolean {
         const settings = this.fretboard.settings;
+        const currentNote = this.scale.note(this.currentDegree);
         const correct = new FretboardData(this.scale);
-        correct.setNote(this.scale.note(this.currentDegree), settings.firstFret, settings.lastFret);
+
+        correct.setNote(currentNote, settings.firstFret, settings.lastFret);
+        if (settings.openStrings) {
+            correct.setNote(currentNote, 0, 0);
+        }
+
         return this.selection.equals(correct);
     }
 

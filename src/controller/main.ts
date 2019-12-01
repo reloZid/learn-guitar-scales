@@ -31,7 +31,7 @@ export class Main {
         this.fretboard.setup(settings);
 
         const data = new FretboardData(this.setup.scale);
-        data.setScale(settings.firstFret, settings.lastFret);
+        data.setScale();
         this.fretboard.showData(data);
     }
 

@@ -1,7 +1,8 @@
 {
   "name": "learn-guitar-scales",
   "scripts": {
-    "start": "parcel src/index.html"
+    "dev": "parcel src/index.html",
+    "build": "parcel build --public-url /learn-scales/ src/index.html"
   },
   "dependencies": {
     "bootstrap": "^4.3.1",
