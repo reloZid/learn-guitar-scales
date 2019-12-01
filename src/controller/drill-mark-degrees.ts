@@ -1,19 +1,19 @@
 import {Fretboard, NotePosition} from "../view/fretboard";
 import {Scale} from "../model/scale";
 import {ScaleDegree} from "../model/scale-degree";
-import {Drill} from "../view/drill";
+import {DrillMenu} from "../view/drill-menu";
 
 export class DrillMarkDegrees {
     private fretboard: Fretboard;
-    private drill: Drill;
+    private drillMenu: DrillMenu;
     private scale: Scale;
 
     private currentDegree: ScaleDegree;
     private selectedPositions: NotePosition[] = [];
 
-    constructor(fretboard: Fretboard, drill: Drill, scale: Scale) {
+    constructor(fretboard: Fretboard, drillMenu: DrillMenu, scale: Scale) {
         this.fretboard = fretboard;
-        this.drill = drill;
+        this.drillMenu = drillMenu;
         this.scale = scale;
         this.currentDegree = this.scale.degrees[0];
 
@@ -27,11 +27,11 @@ export class DrillMarkDegrees {
             }
         });
 
-        this.drill.onNext(() => {
+        this.drillMenu.onNext(() => {
             if (this.validate()) {
                 this.next();
             } else {
-                this.drill.wrongTryAgain();
+                this.drillMenu.wrongTryAgain();
             }
         });
     }
@@ -57,7 +57,7 @@ export class DrillMarkDegrees {
         this.selectedPositions = [];
 
         this.chooseRandomDegree();
-        this.drill.question(`In the key of ${this.scale.root.name}, where do you find the ${this.currentDegree.text}?`);
+        this.drillMenu.question(`In the key of ${this.scale.root.name}, where do you find the ${this.currentDegree.text}?`);
     }
 
     private isPositionSelected(position: NotePosition): boolean {

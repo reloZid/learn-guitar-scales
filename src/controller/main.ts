@@ -8,7 +8,7 @@ import $ from "jquery";
 import {Fretboard} from "../view/fretboard";
 import {DrillMarkDegrees} from "./drill-mark-degrees";
 import {Setup} from "../view/setup";
-import {Drill} from "../view/drill";
+import {DrillMenu} from "../view/drill-menu";
 
 $(function() {
     new Main();
@@ -16,7 +16,7 @@ $(function() {
 
 export class Main {
     private fretboard: Fretboard = new Fretboard();
-    private drill: Drill = new Drill();
+    private drill: DrillMenu = new DrillMenu();
     private setup: Setup = new Setup();
 
     constructor() {

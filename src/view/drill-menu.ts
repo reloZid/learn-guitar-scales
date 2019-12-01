@@ -1,6 +1,6 @@
 import $ from "jquery";
 
-export class Drill {
+export class DrillMenu {
     private text: string = "";
 
     constructor() {
