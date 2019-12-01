@@ -45,6 +45,7 @@ export class Setup {
             firstFret: parseInt(<string>$('#select-first-fret').val()),
             lastFret: parseInt(<string>$('#select-last-fret').val()),
             openStrings: $('#check-open-strings').is(':checked'),
+            labels: $('#check-show-degrees').is(':checked') ? "scale-degrees" : "notes",
         }
     }
 
@@ -55,7 +56,4 @@ export class Setup {
         );
     }
 
-    get showDegrees(): boolean {
-        return $('#check-show-degrees').is(':checked');
-    }
 }

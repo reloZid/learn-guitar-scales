@@ -9,6 +9,7 @@ import {Fretboard} from "../view/fretboard";
 import {DrillMarkDegrees} from "./drill-mark-degrees";
 import {Setup} from "../view/setup";
 import {DrillMenu} from "../view/drill-menu";
+import {FretboardData} from "../model/fretboard-data";
 
 $(function() {
     new Main();
@@ -26,13 +27,15 @@ export class Main {
     }
 
     private updateFretboard() {
-        this.fretboard.setup(this.setup.fretboardSettings);
-        this.fretboard.showScale(this.setup.scale, this.setup.showDegrees);
+        const settings = this.setup.fretboardSettings;
+        this.fretboard.setup(settings);
+
+        const data = new FretboardData(this.setup.scale);
+        data.setScale(settings.firstFret, settings.lastFret);
+        this.fretboard.showData(data);
     }
 
     private start() {
-        this.fretboard.hideNotes();
-
         this.setup.hide();
         this.drill.show();
 

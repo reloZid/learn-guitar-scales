@@ -1,7 +1,8 @@
-import {Fretboard, NotePosition} from "../view/fretboard";
+import {Fretboard} from "../view/fretboard";
 import {Scale} from "../model/scale";
 import {ScaleDegree} from "../model/scale-degree";
 import {DrillMenu} from "../view/drill-menu";
+import {FretboardData} from "../model/fretboard-data";
 
 export class DrillMarkDegrees {
     private fretboard: Fretboard;
@@ -9,22 +10,24 @@ export class DrillMarkDegrees {
     private scale: Scale;
 
     private currentDegree: ScaleDegree;
-    private selectedPositions: NotePosition[] = [];
+    private selection: FretboardData;
 
     constructor(fretboard: Fretboard, drillMenu: DrillMenu, scale: Scale) {
         this.fretboard = fretboard;
         this.drillMenu = drillMenu;
         this.scale = scale;
         this.currentDegree = this.scale.degrees[0];
+        this.selection = new FretboardData(scale);
 
         this.next();
 
         this.fretboard.onClick((position) => {
-            if (this.isPositionSelected(position)) {
-                this.unselectPosition(position);
+            if (this.selection.getContent(position) !== null) {
+                this.selection.clearContent(position);
             } else {
-                this.selectPosition(position);
+                this.selection.setContent(position, this.currentDegree);
             }
+            this.fretboard.showData(this.selection);
         });
 
         this.drillMenu.onNext(() => {
@@ -37,48 +40,22 @@ export class DrillMarkDegrees {
     }
 
     private validate(): boolean {
-        let correctPositions = this.fretboard.visiblePositions(this.scale.note(this.currentDegree));
-
-        if (this.selectedPositions.length !== correctPositions.length) {
-            return false;
-        }
-
-        for (let position of correctPositions) {
-            if (!this.isPositionSelected(position)) {
-                return false;
-            }
-        }
-
-        return true;
+        const settings = this.fretboard.settings;
+        const correct = new FretboardData(this.scale);
+        correct.setNote(this.scale.note(this.currentDegree), settings.firstFret, settings.lastFret);
+        return this.selection.equals(correct);
     }
 
     private next() {
-        this.fretboard.hideNotes();
-        this.selectedPositions = [];
+        this.selection.reset();
+        this.fretboard.showData(this.selection);
 
-        this.chooseRandomDegree();
-        this.drillMenu.question(`In the key of ${this.scale.root.name}, where do you find the ${this.currentDegree.text}?`);
-    }
-
-    private isPositionSelected(position: NotePosition): boolean {
-        return this.selectedPositions.some(item => item.string === position.string && item.fret === position.fret);
-    }
-
-    private selectPosition(position: NotePosition) {
-        this.fretboard.showNoteAs(position, <ScaleDegree>this.currentDegree);
-        this.selectedPositions.push(position);
-    }
-
-    private unselectPosition(position: NotePosition) {
-        this.fretboard.hideNote(position);
-        this.selectedPositions = this.selectedPositions.filter(item => item.string !== position.string && item.fret !== position.fret);
-    }
-
-    private chooseRandomDegree() {
         const lastDegree = this.currentDegree;
-
         while (this.currentDegree === lastDegree) {
             this.currentDegree = this.scale.degrees[Math.floor(Math.random() * this.scale.degrees.length)];
         }
+
+        this.drillMenu.question(`In the key of ${this.scale.root.name}, where do you find the ${this.currentDegree.text}?`);
     }
+
 }
