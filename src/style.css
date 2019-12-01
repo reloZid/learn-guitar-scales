@@ -52,3 +52,11 @@ button {
 #drill-text {
     margin-bottom: 1em;
 }
+
+#drill-text .correct {
+    color: #28a745;
+}
+
+#drill-text .wrong {
+    color: #dc3545;
+}

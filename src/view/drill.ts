@@ -1,6 +1,8 @@
 import $ from "jquery";
 
 export class Drill {
+    private text: string = "";
+
     constructor() {
         $('#button-next').on('click', event => event.preventDefault());
     }
@@ -17,7 +19,14 @@ export class Drill {
         $('#drill').hide();
     }
 
-    setInstruction(text: string) {
+    question(text: string) {
+        this.text = text;
         $('#drill-text').text(text);
+    }
+
+    wrongTryAgain() {
+        const container = $('#drill-text');
+        container.html('<span class="wrong"><strong>Wrong!</strong> Try again.</span>');
+        setTimeout(() => container.text(this.text), 2000);
     }
 }

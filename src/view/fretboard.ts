@@ -51,7 +51,6 @@ export class Fretboard {
         this.settings = settings;
         this.generateFretboard();
         this.styleFretboard();
-        $('.note, .open-note').on('click', () => console.log('clicked'));
     }
 
     private generateFretboard() {

@@ -30,6 +30,8 @@ export class DrillMarkDegrees {
         this.drill.onNext(() => {
             if (this.validate()) {
                 this.next();
+            } else {
+                this.drill.wrongTryAgain();
             }
         });
     }
@@ -55,7 +57,7 @@ export class DrillMarkDegrees {
         this.selectedPositions = [];
 
         this.chooseRandomDegree();
-        this.drill.setInstruction(`In the key of ${this.scale.root.name}, where do you find the ${this.currentDegree.text}?`);
+        this.drill.question(`In the key of ${this.scale.root.name}, where do you find the ${this.currentDegree.text}?`);
     }
 
     private isPositionSelected(position: NotePosition): boolean {
