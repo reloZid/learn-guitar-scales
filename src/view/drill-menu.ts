@@ -24,9 +24,15 @@ export class DrillMenu {
         $('#drill-text').text(text);
     }
 
+    correct(callback: () => void) {
+        const container = $('#drill-text');
+        container.html('<span class="correct"><strong>Correct!</strong></span>');
+        setTimeout(callback, 1000);
+    }
+
     wrongTryAgain() {
         const container = $('#drill-text');
         container.html('<span class="wrong"><strong>Wrong!</strong> Try again.</span>');
-        setTimeout(() => container.text(this.text), 2000);
+        setTimeout(() => container.text(this.text), 1500);
     }
 }

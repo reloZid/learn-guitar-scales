@@ -32,7 +32,7 @@ export class DrillMarkDegrees {
 
         this.drillMenu.onNext(() => {
             if (this.validate()) {
-                this.next();
+                this.drillMenu.correct(() => this.next());
             } else {
                 this.drillMenu.wrongTryAgain();
             }
