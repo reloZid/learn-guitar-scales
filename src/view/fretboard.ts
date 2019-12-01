@@ -60,8 +60,8 @@ export class Fretboard {
             for (let fret = this._settings.firstFret; fret < this._settings.lastFret + 1; fret++) {
                 fretboardHtml += '<td>';
 
-                const hasSingleMarker = [3, 5, 7, 9].includes(fret % 12) && string === 3;
-                const hasDoubleMarker = fret % 12 === 0 && (string === 2 || string === 4);
+                const hasSingleMarker = [3, 5, 7, 9].includes(fret % 12) && string === 2;
+                const hasDoubleMarker = fret % 12 === 0 && (string === 1 || string === 3);
                 if (hasSingleMarker || hasDoubleMarker) {
                     fretboardHtml += '<div class="marker" />';
                 }
