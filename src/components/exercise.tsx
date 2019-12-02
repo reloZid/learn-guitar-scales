@@ -58,10 +58,10 @@ export class Exercise extends React.Component<Props, State> {
 
     private onClickNote(position: FretboardPosition) {
         const newSelection = this.state.selection.clone();
-        if (this.state.selection.getContent(position)) {
-            newSelection.clearContent(position);
+        if (this.state.selection.getPosition(position)) {
+            newSelection.clearPosition(position);
         } else {
-            newSelection.setContent(position, this.state.degree);
+            newSelection.setPosition(position, this.state.degree);
         }
         this.setState({selection: newSelection});
     }

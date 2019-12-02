@@ -17,10 +17,8 @@ export class MarkDegreeExercise implements ExerciseController {
     }
 
     nextQuestion(): { question: string; degree: ScaleDegree } {
-        const lastDegree = this.currentDegree;
-        while (this.currentDegree === lastDegree) {
-            this.currentDegree = this.scale.degrees[Math.floor(Math.random() * this.scale.degrees.length)];
-        }
+        const availableDegrees = this.scale.degrees.filter(degree => degree.value !== this.currentDegree.value);
+        this.currentDegree = availableDegrees[Math.floor(Math.random() * availableDegrees.length)];
 
         return {
             question: `In the key of ${this.scale.root.name}, where do you find the ${this.currentDegree.text}?`,
@@ -29,13 +27,9 @@ export class MarkDegreeExercise implements ExerciseController {
     }
 
     validateAnswer(selection: FretboardData): boolean {
-        const currentNote = this.scale.note(this.currentDegree);
-        const correct = new FretboardData(this.scale);
-
-        correct.setNote(currentNote, this.fretboardSettings.firstFret, this.fretboardSettings.lastFret);
-        if (this.fretboardSettings.openStrings) {
-            correct.setNote(currentNote, 0, 0);
-        }
+        const correct = new FretboardData(this.scale)
+            .setNote(this.scale.note(this.currentDegree))
+            .clip(this.fretboardSettings);
 
         return selection.equals(correct);
     }

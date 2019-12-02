@@ -2,8 +2,6 @@ import React from "react";
 
 import {FretboardContent, FretboardData, FretboardPosition} from "../model/fretboard-data";
 
-const stringCount = 6;
-
 const style = {
     stringSpacing: 55,
     fretSpacing: 120,
@@ -42,7 +40,7 @@ type Props = {
 export class Fretboard extends React.Component<Props, {}> {
     render() {
         const rows = [];
-        for (let string = 0; string < stringCount; string++) {
+        for (let string = 0; string < FretboardData.getStringCount(); string++) {
             const cols = [];
             for (let fret = this.props.settings.firstFret; fret < this.props.settings.lastFret + 1; fret++) {
                 cols.push(this.renderPosition({string, fret}));
@@ -80,8 +78,8 @@ export class Fretboard extends React.Component<Props, {}> {
         return (
             <td style={cellStyle} key={position.fret}>
                 {(hasSingleMarker || hasDoubleMarker) && Fretboard.renderMarker()}
-                {hasOpenNote && this.renderOpenNote(openPosition, this.props.data.getContent(openPosition))}
-                {this.renderNote(position, this.props.data.getContent(position))}
+                {hasOpenNote && this.renderOpenNote(openPosition, this.props.data.getPosition(openPosition))}
+                {this.renderNote(position, this.props.data.getPosition(position))}
             </td>
         );
     }

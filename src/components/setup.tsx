@@ -20,12 +20,14 @@ const scales: { [index: string]: string[] } = {
     'chromatic': ['1', 'b2', '2', 'b3', '3', '4', 'b5', '5', 'b6', '6', 'b7', '7'],
 };
 
+export type ExerciseId = "mark-degree" | "mark-degree-on-string";
+
 type Props = {
     fretboardSettings: FretboardSettings,
     onFretboardSettingsChanged: (fretboardSettings: FretboardSettings) => void,
     scale: Scale,
     onScaleChanged: (scale: Scale) => void,
-    onStart: () => void,
+    onStart: (exercise: ExerciseId) => void,
 }
 
 export class Setup extends React.Component<Props> {
@@ -47,12 +49,13 @@ export class Setup extends React.Component<Props> {
     }
 
     private inputs = {
+        exercise: React.createRef<HTMLSelectElement>(),
+        scale: React.createRef<HTMLSelectElement>(),
+        root: React.createRef<HTMLSelectElement>(),
         firstFret: React.createRef<HTMLSelectElement>(),
         lastFret: React.createRef<HTMLSelectElement>(),
         openStrings: React.createRef<HTMLInputElement>(),
         showDegrees: React.createRef<HTMLInputElement>(),
-        scale: React.createRef<HTMLSelectElement>(),
-        root: React.createRef<HTMLSelectElement>(),
     };
 
     render() {
@@ -61,6 +64,15 @@ export class Setup extends React.Component<Props> {
 
         const form = (
             <form>
+                <div className="form-group">
+                    <label htmlFor="select-exercise">Exercise</label>
+                    <select className="form-control fretboard-setup"
+                            id="select-exercise"
+                            ref={this.inputs.exercise}>
+                        <option value="mark-degree">Mark Degree</option>
+                        <option value="mark-degree-on-string">Mark Degree On String</option>
+                    </select>
+                </div>
                 <div className="form-group">
                     <label htmlFor="select-scale">Scale</label>
                     <select className="form-control fretboard-setup"
@@ -140,7 +152,10 @@ export class Setup extends React.Component<Props> {
 
         return (
             <div>
-                <Fretboard settings={this.props.fretboardSettings} data={FretboardData.forScale(this.props.scale)}/>
+                <Fretboard
+                    settings={this.props.fretboardSettings}
+                    data={new FretboardData(this.props.scale).setScale()}
+                />
 
                 <div className="card">
                     <div className="card-body">
@@ -174,6 +189,8 @@ export class Setup extends React.Component<Props> {
     }
 
     private onStart() {
-        this.props.onStart();
+        if (this.inputs.exercise.current) {
+            this.props.onStart(this.inputs.exercise.current.value as ExerciseId);
+        }
     }
 }

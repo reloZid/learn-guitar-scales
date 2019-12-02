@@ -38,8 +38,4 @@ export class Scale {
             return this.degrees.some(item => item.value === degree.value);
         }
     }
-
-    randomDegree(): ScaleDegree {
-        return this.degrees[Math.floor(Math.random() * this.degrees.length)];
-    }
 }
