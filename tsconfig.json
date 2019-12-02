@@ -1,12 +1,10 @@
 {
+  "compileOnSave": true,
   "compilerOptions": {
-    "module": "commonjs",
-    "moduleResolution": "node",
-    "newLine": "LF",
     "target": "es5",
+    "noEmit": true,
     "sourceMap": true,
     "declaration": true,
-    "jsx": "preserve",
     "lib": [
       "es2017",
       "dom"
@@ -22,7 +20,6 @@
     "src/**/*"
   ],
   "exclude": [
-    ".git",
     "node_modules"
   ]
 }

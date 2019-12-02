@@ -19,7 +19,7 @@ function equal(pos1: FretboardPosition, pos2: FretboardPosition) {
 }
 
 export class FretboardData {
-    private scale: Scale;
+    private readonly scale: Scale;
     private data: { position: FretboardPosition, content: FretboardContent }[] = [];
 
     constructor(scale: Scale) {

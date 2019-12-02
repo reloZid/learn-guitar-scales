@@ -5,12 +5,12 @@ import {DrillMenu} from "../view/drill-menu";
 import {FretboardData} from "../model/fretboard-data";
 
 export class DrillMarkDegrees {
-    private fretboard: Fretboard;
-    private drillMenu: DrillMenu;
-    private scale: Scale;
+    private readonly fretboard: Fretboard;
+    private readonly drillMenu: DrillMenu;
+    private readonly scale: Scale;
 
+    private readonly selection: FretboardData;
     private currentDegree: ScaleDegree;
-    private selection: FretboardData;
 
     constructor(fretboard: Fretboard, drillMenu: DrillMenu, scale: Scale) {
         this.fretboard = fretboard;
