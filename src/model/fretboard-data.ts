@@ -19,6 +19,12 @@ function equal(pos1: FretboardPosition, pos2: FretboardPosition) {
 }
 
 export class FretboardData {
+    static forScale(scale: Scale) {
+        const fretboardData = new FretboardData(scale);
+        fretboardData.setScale();
+        return fretboardData;
+    }
+
     private readonly scale: Scale;
     private data: { position: FretboardPosition, content: FretboardContent }[] = [];
 
@@ -26,13 +32,13 @@ export class FretboardData {
         this.scale = scale;
     }
 
-    getContent(position: FretboardPosition): FretboardContent | null {
+    getContent(position: FretboardPosition): FretboardContent | undefined {
         for (const item of this.data) {
             if (equal(item.position, position)) {
                 return item.content;
             }
         }
-        return null;
+        return undefined;
     }
 
     setContent(position: FretboardPosition, note: Note): void;
@@ -94,6 +100,12 @@ export class FretboardData {
         }
 
         return true;
+    }
+
+    clone(): FretboardData {
+        const clone = new FretboardData(this.scale);
+        clone.data = this.data.slice();
+        return clone;
     }
 
     private getNote(position: FretboardPosition) {

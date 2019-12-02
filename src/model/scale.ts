@@ -5,11 +5,13 @@ export class Scale {
     readonly root: Note;
     readonly degrees: ScaleDegree[];
     readonly notes: Note[];
+    readonly name: string;
 
-    constructor(root: Note, degrees: ScaleDegree[]) {
+    constructor(root: Note, degrees: ScaleDegree[], name: string) {
         this.root = root;
         this.degrees = degrees;
         this.notes = degrees.map(degree => this.note(degree));
+        this.name = name;
     }
 
     note(degree: ScaleDegree): Note {
@@ -35,5 +37,9 @@ export class Scale {
             const degree = noteOrDegree;
             return this.degrees.some(item => item.value === degree.value);
         }
+    }
+
+    randomDegree(): ScaleDegree {
+        return this.degrees[Math.floor(Math.random() * this.degrees.length)];
     }
 }

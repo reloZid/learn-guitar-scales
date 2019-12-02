@@ -2,6 +2,7 @@
   "compileOnSave": true,
   "compilerOptions": {
     "target": "es5",
+    "jsx": "react",
     "noEmit": true,
     "sourceMap": true,
     "declaration": true,
@@ -14,7 +15,9 @@
     "noUnusedParameters": true,
     "noImplicitReturns": true,
     "noFallthroughCasesInSwitch": true,
-    "allowSyntheticDefaultImports": true
+    "allowSyntheticDefaultImports": true,
+    "esModuleInterop": true,
+    "importHelpers": true
   },
   "include": [
     "src/**/*"
