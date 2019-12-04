@@ -2,9 +2,9 @@ import React from "react";
 
 import {FretboardContent, FretboardData, FretboardPosition} from "../model/fretboard-data";
 
-const style = {
+let style = {
+    maxFretSpacing: 120,
     stringSpacing: 55,
-    fretSpacing: 120,
     markerSize: 30,
     noteSize: 40,
     openNoteSize: 35,
@@ -37,13 +37,34 @@ type Props = {
     onClick?: (position: FretboardPosition) => void,
 }
 
-export class Fretboard extends React.Component<Props, {}> {
+type State = {
+    fretSpacing: number,
+    additionalFrets: number,
+}
+
+export class Fretboard extends React.PureComponent<Props, State> {
+    private container = React.createRef<HTMLDivElement>();
+
+    constructor(props: Readonly<Props>) {
+        super(props);
+
+        this.state = {
+            fretSpacing: 0,
+            additionalFrets: 0,
+        };
+
+        this.updateDimensions = this.updateDimensions.bind(this);
+    }
+
     render() {
+        let firstFret = this.props.settings.firstFret - Math.floor(this.state.additionalFrets / 2);
+        let lastFret = this.props.settings.lastFret + Math.ceil(this.state.additionalFrets / 2);
+
         const rows = [];
         for (let string = 0; string < FretboardData.getStringCount(); string++) {
             const cols = [];
-            for (let fret = this.props.settings.firstFret; fret < this.props.settings.lastFret + 1; fret++) {
-                cols.push(this.renderPosition({string, fret}));
+            for (let fret = firstFret; fret < lastFret + 1; fret++) {
+                cols.push(this.renderPosition({string, fret}, fret === firstFret));
             }
             rows.push(<tr key={string}>{cols}</tr>)
         }
@@ -53,7 +74,7 @@ export class Fretboard extends React.Component<Props, {}> {
         };
 
         return (
-            <div id="fretboard">
+            <div id="fretboard" ref={this.container}>
                 <table style={tableStyle}>
                     <tbody>
                     {rows}
@@ -63,30 +84,35 @@ export class Fretboard extends React.Component<Props, {}> {
         );
     }
 
-    private renderPosition(position: FretboardPosition) {
+    private renderPosition(position: FretboardPosition, isFirstFret: boolean) {
         const hasSingleMarker = [3, 5, 7, 9].includes(position.fret % 12) && position.string === 2;
         const hasDoubleMarker = position.fret % 12 === 0 && (position.string === 1 || position.string === 3);
-        const hasOpenNote = position.fret === this.props.settings.firstFret && this.props.settings.openStrings;
+        const hasOpenNote = isFirstFret && this.props.settings.openStrings;
         const openPosition = {string: position.string, fret: 0};
 
         const cellStyle = {
-            width: style.fretSpacing,
-            minWidth: style.fretSpacing,
+            width: this.state.fretSpacing,
+            minWidth: this.state.fretSpacing,
             height: style.stringSpacing,
         };
 
+        let className = "";
+        if (position.fret < this.props.settings.firstFret || position.fret > this.props.settings.lastFret) {
+            className = "inactive";
+        }
+
         return (
-            <td style={cellStyle} key={position.fret}>
-                {(hasSingleMarker || hasDoubleMarker) && Fretboard.renderMarker()}
+            <td style={cellStyle} key={position.fret} className={className}>
+                {(hasSingleMarker || hasDoubleMarker) && this.renderMarker()}
                 {hasOpenNote && this.renderOpenNote(openPosition, this.props.data.getPosition(openPosition))}
                 {this.renderNote(position, this.props.data.getPosition(position))}
             </td>
         );
     }
 
-    private static renderMarker() {
+    private renderMarker() {
         const markerStyle = {
-            left: style.fretSpacing / 2 - style.markerSize / 2,
+            left: this.state.fretSpacing / 2 - style.markerSize / 2,
             top: style.stringSpacing - style.markerSize / 2,
             width: style.markerSize,
             height: style.markerSize,
@@ -125,7 +151,7 @@ export class Fretboard extends React.Component<Props, {}> {
 
     private renderNote(position: FretboardPosition, content?: FretboardContent) {
         const contentStyle = {
-            left: style.fretSpacing / 2 - style.noteSize / 2,
+            left: this.state.fretSpacing / 2 - style.noteSize / 2,
             top: style.stringSpacing / 2 - style.noteSize / 2,
             width: style.noteSize,
             height: style.noteSize,
@@ -149,5 +175,43 @@ export class Fretboard extends React.Component<Props, {}> {
         if (this.props.onClick) {
             this.props.onClick(position);
         }
+    }
+
+    componentDidMount() {
+        this.updateDimensions();
+        window.addEventListener('resize', this.updateDimensions);
+    }
+
+    componentWillUnmount() {
+        window.removeEventListener('resize', this.updateDimensions);
+    }
+
+    componentDidUpdate() {
+        this.updateDimensions();
+    }
+
+    private updateDimensions() {
+        if (!this.container.current) {
+            return;
+        }
+
+        let containerWidth = this.container.current.clientWidth;
+        if (this.props.settings.openStrings) {
+            containerWidth -= style.openNoteSize;
+        }
+
+        const fretCount = this.props.settings.lastFret - this.props.settings.firstFret + 1;
+        let fretSpacing = containerWidth / fretCount;
+        let additionalFrets = 0;
+
+        while (fretSpacing > style.maxFretSpacing) {
+            additionalFrets++;
+            fretSpacing = containerWidth / (fretCount + additionalFrets);
+        }
+
+        this.setState({
+            fretSpacing,
+            additionalFrets,
+        });
     }
 }

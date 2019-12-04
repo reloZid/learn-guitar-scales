@@ -36,7 +36,7 @@ export class Exercise extends React.Component<Props, State> {
 
     render() {
         return (
-            <div>
+            <div id="exercise">
                 <Fretboard
                     settings={this.props.fretboardSettings}
                     data={this.state.selection}
@@ -45,11 +45,19 @@ export class Exercise extends React.Component<Props, State> {
                 <div className="card">
                     <div className="card-body">
                         <h5 className="card-title">Drill</h5>
-                        <div id="exercise-text">
-                            {!this.state.wrongAnswer && this.state.question}
-                            {this.state.wrongAnswer && <span className="wrong"><strong>Wrong!</strong> Try again.</span>}
+                        <div id="exercise-content">
+                            <div id="exercise-text">
+                                    {!this.state.wrongAnswer && this.state.question}
+                                    {this.state.wrongAnswer &&
+                                    <span className="wrong"><strong>Wrong!</strong> Try again.</span>
+                                    }
+                            </div>
+                            <div id="exercise-buttons">
+                                    <button type="submit" className="btn btn-primary"
+                                            onClick={this.onNext.bind(this)}>Next
+                                    </button>
+                            </div>
                         </div>
-                        <button type="submit" className="btn btn-primary" onClick={this.onNext.bind(this)}>Next</button>
                     </div>
                 </div>
             </div>
