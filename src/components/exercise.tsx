@@ -35,11 +35,15 @@ export class Exercise extends React.Component<Props, State> {
     }
 
     render() {
+        const pattern = new FretboardData(this.props.scale);
+        pattern.setScale();
+
         return (
             <div id="exercise">
                 <Fretboard
                     settings={this.props.fretboardSettings}
                     data={this.state.selection}
+                    pattern={pattern}
                     onClick={this.onClickNote.bind(this)}
                 />
                 <div className="card">

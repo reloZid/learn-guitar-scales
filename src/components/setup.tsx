@@ -37,6 +37,7 @@ export class Setup extends React.Component<Props> {
             lastFret: 8,
             openStrings: false,
             labels: 'scale-degrees',
+            pattern: false,
         }
     };
 
@@ -56,6 +57,7 @@ export class Setup extends React.Component<Props> {
         lastFret: React.createRef<HTMLSelectElement>(),
         openStrings: React.createRef<HTMLInputElement>(),
         showDegrees: React.createRef<HTMLInputElement>(),
+        pattern: React.createRef<HTMLInputElement>(),
     };
 
     render() {
@@ -150,6 +152,16 @@ export class Setup extends React.Component<Props> {
                                 <label className="form-check-label" htmlFor="check-show-degrees">Show Scale
                                     Degrees</label>
                             </div>
+                            <div className="form-check">
+                                <input type="checkbox"
+                                       className="form-check-input"
+                                       id="check-show-pattern"
+                                       ref={this.inputs.pattern}
+                                       checked={this.props.fretboardSettings.pattern}
+                                       onChange={this.onFretboardSettingsChanged.bind(this)}/>
+                                <label className="form-check-label" htmlFor="check-show-pattern">Show Scale
+                                    Pattern</label>
+                            </div>
                         </div>
                     </div>
                     <div className="col-md-6">
@@ -184,12 +196,14 @@ export class Setup extends React.Component<Props> {
     }
 
     private onFretboardSettingsChanged() {
-        if (this.inputs.firstFret.current && this.inputs.lastFret.current && this.inputs.showDegrees.current && this.inputs.openStrings.current) {
+        if (this.inputs.firstFret.current && this.inputs.lastFret.current && this.inputs.showDegrees.current &&
+            this.inputs.openStrings.current && this.inputs.pattern.current) {
             this.props.onFretboardSettingsChanged({
                 firstFret: parseInt(this.inputs.firstFret.current.value),
                 lastFret: parseInt(this.inputs.lastFret.current.value),
                 labels: this.inputs.showDegrees.current.checked ? "scale-degrees" : "notes",
                 openStrings: this.inputs.openStrings.current.checked,
+                pattern: this.inputs.pattern.current.checked,
             });
         }
     }
