@@ -106,7 +106,7 @@ export class Fretboard extends React.PureComponent<Props, State> {
         return (
             <td style={cellStyle} key={position.fret} className={className}>
                 {(hasSingleMarker || hasDoubleMarker) && this.renderMarker()}
-                {hasOpenNote && this.renderOpenNote(openPosition)}
+                {hasOpenNote && this.renderNote(openPosition)}
                 {this.renderNote(position)}
             </td>
         );
@@ -124,55 +124,32 @@ export class Fretboard extends React.PureComponent<Props, State> {
         return <div className="marker" style={markerStyle}/>;
     }
 
-    private renderOpenNote(position: FretboardPosition) {
-        const content = this.props.data.getPosition(position);
-
-        const noteStyle = {
-            left: -style.openNoteSize,
-            width: style.openNoteSize,
-            height: style.stringSpacing,
-        };
-
-        const contentStyle = {
-            top: style.stringSpacing / 2 - style.openNoteSize / 2,
-            width: style.openNoteSize,
-            height: style.openNoteSize,
-            borderRadius: style.openNoteSize / 2,
-            lineHeight: (style.openNoteSize - 3) + 'px',
-            backgroundColor: style.scaleDegreeColors[content && content.degree.value || 0],
-        };
-
-        return (
-            <div className="open-note" style={noteStyle} onClick={() => this.onClick(position)}>
-                {content && (
-                    <div className="note-content" style={contentStyle}>
-                        {this.props.settings.labels == "notes" ? content.note.name : content.degree.name}
-                    </div>
-                )}
-            </div>
-        );
-    }
-
     private renderNote(position: FretboardPosition) {
+        const openNote = position.fret === 0;
         const content = this.props.data.getPosition(position);
         const patternContent = this.props.pattern && this.props.pattern.getPosition(position);
+        const noteSize = openNote ? style.openNoteSize : style.noteSize;
 
-        let contentStyle = {
-            left: this.state.fretSpacing / 2 - style.noteSize / 2,
-            top: style.stringSpacing / 2 - style.noteSize / 2,
-            width: style.noteSize,
-            height: style.noteSize,
-            borderRadius: style.noteSize / 2,
-            lineHeight: (style.noteSize - 3) + 'px',
-            backgroundColor: undefined as string|undefined,
+        let contentStyle: { [index: string]: string | number | undefined } = {
+            top: style.stringSpacing / 2 - noteSize / 2,
+            width: noteSize,
+            height: noteSize,
+            borderRadius: noteSize / 2,
+            lineHeight: (noteSize - 3) + 'px',
         };
+
+        if (openNote) {
+            contentStyle.left = -noteSize;
+        } else {
+            contentStyle.left = this.state.fretSpacing / 2 - noteSize / 2;
+        }
 
         if (content) {
             contentStyle.backgroundColor = style.scaleDegreeColors[content.degree.value];
         }
 
         return (
-            <div className="note" onClick={() => this.onClick(position)}>
+            <div className={openNote ? "open-note" : "note"} onClick={() => this.onClick(position)}>
                 {content && (
                     <div className="note-content" style={contentStyle}>
                         {this.props.settings.labels == "notes" ? content.note.name : content.degree.name}
