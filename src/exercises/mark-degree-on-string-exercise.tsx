@@ -25,10 +25,10 @@ export class MarkDegreeOnStringExercise implements ExerciseController {
                 continue;
             }
 
-            const data = new FretboardData(this.scale)
-                .setScale()
-                .clip(this.fretboardSettings)
-                .filter(position => position.string === string);
+            const data = new FretboardData(this.scale);
+            data.setScale();
+            data.clip(this.fretboardSettings);
+            data.filter(position => position.string === string);
 
             if (!data.isEmpty()) {
                 availableDegreesOnStrings.push({string, degrees: data.map((_position, content) => content.degree)});
@@ -49,10 +49,10 @@ export class MarkDegreeOnStringExercise implements ExerciseController {
     }
 
     validateAnswer(selection: FretboardData): boolean {
-        const correct = new FretboardData(this.scale)
-            .setNote(this.scale.note(this.currentDegree))
-            .clip(this.fretboardSettings)
-            .filter(position => position.string === this.currentString);
+        const correct = new FretboardData(this.scale);
+        correct.setNote(this.scale.note(this.currentDegree));
+        correct.clip(this.fretboardSettings);
+        correct.filter(position => position.string === this.currentString);
 
         return selection.equals(correct);
     }

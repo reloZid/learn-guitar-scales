@@ -24,11 +24,14 @@ export class Main extends React.Component<{}, State> {
     constructor(props: Readonly<{}>) {
         super(props);
 
+        const initialData = new FretboardData(Setup.getDefaultScale());
+        initialData.setScale();
+
         this.state = {
             mode: 'setup',
             scale: Setup.getDefaultScale(),
             fretboardSettings: Setup.getDefaultFretboardSettings(),
-            fretboardData: new FretboardData(Setup.getDefaultScale()).setScale(),
+            fretboardData: initialData,
         };
     }
 
@@ -73,7 +76,9 @@ export class Main extends React.Component<{}, State> {
     }
 
     onScaleChanged(scale: Scale) {
-        this.setState({scale, fretboardData: new FretboardData(scale).setScale()});
+        const fretboardData = new FretboardData(scale);
+        fretboardData.setScale();
+        this.setState({scale, fretboardData});
     }
 
     onStart(exercise: ExerciseId) {

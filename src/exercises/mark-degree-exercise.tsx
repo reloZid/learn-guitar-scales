@@ -27,9 +27,9 @@ export class MarkDegreeExercise implements ExerciseController {
     }
 
     validateAnswer(selection: FretboardData): boolean {
-        const correct = new FretboardData(this.scale)
-            .setNote(this.scale.note(this.currentDegree))
-            .clip(this.fretboardSettings);
+        const correct = new FretboardData(this.scale);
+        correct.setNote(this.scale.note(this.currentDegree));
+        correct.clip(this.fretboardSettings);
 
         return selection.equals(correct);
     }
