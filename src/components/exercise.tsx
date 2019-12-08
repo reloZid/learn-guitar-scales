@@ -37,6 +37,7 @@ export class Exercise extends React.Component<Props, State> {
     render() {
         const pattern = new FretboardData(this.props.scale);
         pattern.setScale();
+        pattern.clip(this.props.fretboardSettings);
 
         return (
             <div id="exercise">
