@@ -47,16 +47,18 @@ export class Exercise extends React.Component<Props, State> {
                         <h5 className="card-title">Drill</h5>
                         <div id="exercise-content">
                             <div id="exercise-text">
-                                    {!this.state.wrongAnswer && this.state.question}
-                                    {this.state.wrongAnswer &&
+                                {!this.state.wrongAnswer && this.state.question}
+                                {this.state.wrongAnswer && (
                                     <span className="wrong"><strong>Wrong!</strong> Try again.</span>
-                                    }
+                                )}
                             </div>
-                            <div id="exercise-buttons">
+                            {!this.state.wrongAnswer && (
+                                <div id="exercise-buttons">
                                     <button type="submit" className="btn btn-primary"
                                             onClick={this.onNext.bind(this)}>Next
                                     </button>
-                            </div>
+                                </div>
+                            )}
                         </div>
                     </div>
                 </div>
