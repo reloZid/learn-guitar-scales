@@ -7,8 +7,8 @@ button {
 }
 
 #fretboard {
-    margin-top: 2em;
-    margin-bottom: 2em;
+    margin-top: 3.5em;
+    margin-bottom: 2.5em;
 }
 
 #fretboard table {
@@ -24,11 +24,10 @@ button {
 }
 
 #fretboard td.inactive {
-    background-color: lightgray;
+    background-color: #FFE4C460;
 }
 
 #fretboard div.note {
-    z-index: 1;
     width: 100%;
     height: 100%;
     background-image: url('data:image/gif;base64,R0lGODdhAgAIAOMQAB0aFSUfDyooKTUxJkA6Gk9EJFlPLFRRSGtnZnNpUHRvXIF3bY+Ifp6Xh7Gunby4rywAAAAAAgAIAAAEDHAERV5xpiW20BFABAA7');
@@ -37,18 +36,17 @@ button {
 }
 
 #fretboard div.open-note {
-    z-index: 1;
     position: absolute;
 }
 
 #fretboard div.marker {
-    z-index: 2;
+    z-index: 1;
     position: absolute;
     background: gray;
 }
 
 #fretboard div.note-content {
-    z-index: 3;
+    z-index: 2;
     position: absolute;
     color: white;
     text-align: center;
@@ -60,6 +58,15 @@ button {
 
 #fretboard div.note-pattern {
     border: black solid 2px;
+}
+
+#fretboard div.marker-text {
+    position: absolute;
+    top: -1.5em;
+    text-align: center;
+    vertical-align: middle;
+    font-size: x-large;
+    user-select: none;
 }
 
 #exercise-content {
