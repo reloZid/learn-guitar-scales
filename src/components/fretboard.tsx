@@ -62,6 +62,11 @@ export class Fretboard extends React.PureComponent<Props, State> {
         let firstFret = this.props.settings.firstFret - Math.floor(this.state.additionalFrets / 2);
         let lastFret = this.props.settings.lastFret + Math.ceil(this.state.additionalFrets / 2);
 
+        while (firstFret < 1) {
+            firstFret++;
+            lastFret++;
+        }
+
         const rows = [];
         for (let string = 0; string < FretboardData.getStringCount(); string++) {
             const cols = [];
