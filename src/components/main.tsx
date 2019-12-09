@@ -6,33 +6,27 @@ import "../style.css"
 import React from "react";
 import ReactDOM from "react-dom";
 import {FretboardSettings} from "./fretboard";
-import {FretboardData} from "../model/fretboard-data";
-import {Scale} from "../model/scale";
+import {Scale, ScaleSettings} from "../model/scale";
 import {ExerciseId, Setup} from "./setup";
 import {Exercise, ExerciseController} from "./exercise";
 import {MarkDegreeOnStringExercise} from "../exercises/mark-degree-on-string-exercise";
 import {MarkDegreeExercise} from "../exercises/mark-degree-exercise";
 
+type SerializableState = {
+    scaleSettings: ScaleSettings,
+    fretboardSettings: FretboardSettings,
+}
+
 type State = {
     mode: 'setup' | ExerciseId,
     scale: Scale,
     fretboardSettings: FretboardSettings,
-    fretboardData: FretboardData,
 }
 
 export class Main extends React.Component<{}, State> {
     constructor(props: Readonly<{}>) {
         super(props);
-
-        const initialData = new FretboardData(Setup.getDefaultScale());
-        initialData.setScale();
-
-        this.state = {
-            mode: 'setup',
-            scale: Setup.getDefaultScale(),
-            fretboardSettings: Setup.getDefaultFretboardSettings(),
-            fretboardData: initialData,
-        };
+        this.restoreState();
     }
 
     render() {
@@ -44,7 +38,7 @@ export class Main extends React.Component<{}, State> {
         );
     }
 
-    renderContent() {
+    private renderContent() {
         if (this.state.mode === "setup") {
             return (
                 <Setup
@@ -72,22 +66,51 @@ export class Main extends React.Component<{}, State> {
         }
     }
 
-    onFretboardSettingsChanged(fretboardSettings: FretboardSettings) {
+    componentDidUpdate(): void {
+        this.saveState();
+    }
+
+    private onFretboardSettingsChanged(fretboardSettings: FretboardSettings) {
         this.setState({fretboardSettings});
     }
 
-    onScaleChanged(scale: Scale) {
-        const fretboardData = new FretboardData(scale);
-        fretboardData.setScale();
-        this.setState({scale, fretboardData});
+    private onScaleChanged(scale: Scale) {
+        this.setState({scale});
     }
 
-    onStart(exercise: ExerciseId) {
+    private onStart(exercise: ExerciseId) {
         this.setState({mode: exercise});
     }
 
-    onSetup() {
+    private onSetup() {
         this.setState({mode: "setup"});
+    }
+
+    private saveState() {
+        const state: SerializableState = {
+            scaleSettings: this.state.scale.settings,
+            fretboardSettings: this.state.fretboardSettings,
+        };
+
+        window.localStorage.setItem('main-state', JSON.stringify(state));
+    }
+
+    private restoreState() {
+        try {
+            const state = JSON.parse(window.localStorage.getItem('main-state') as string) as SerializableState;
+
+            this.state = {
+                mode: 'setup',
+                scale: new Scale(state.scaleSettings),
+                fretboardSettings: state.fretboardSettings,
+            }
+        } catch (e) {
+            this.state = {
+                mode: 'setup',
+                scale: Setup.getDefaultScale(),
+                fretboardSettings: Setup.getDefaultFretboardSettings(),
+            };
+        }
     }
 }
 

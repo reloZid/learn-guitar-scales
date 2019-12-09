@@ -1,24 +1,7 @@
 import React from "react";
 import {Fretboard, FretboardSettings} from "./fretboard";
 import {Scale} from "../model/scale";
-import {Note} from "../model/note";
-import {ScaleDegree} from "../model/scale-degree";
 import {FretboardData} from "../model/fretboard-data";
-
-const scales: { [index: string]: string[] } = {
-    'minor-pentatonic': ['1', 'b3', '4', '5', 'b7'],
-    'major-pentatonic': ['1', '2', '3', '5', '6'],
-    'minor-arpeggio': ['1', 'b3', '5'],
-    'major-arpeggio': ['1', '3', '5'],
-    'ionian': ['1', '2', '3', '4', '5', '6', '7'],
-    'dorian': ['1', '2', 'b3', '4', '5', '6', 'b7'],
-    'phrygian': ['1', 'b2', 'b3', '4', '5', 'b6', 'b7'],
-    'lydian': ['1', '2', '3', '#4', '5', '6', '7'],
-    'mixolydian': ['1', '2', '3', '4', '5', '6', 'b7'],
-    'aeolian': ['1', '2', 'b3', '4', '5', 'b6', 'b7'],
-    'locrian': ['1', 'b2', 'b3', '4', 'b5', 'b6', 'b7'],
-    'chromatic': ['1', 'b2', '2', 'b3', '3', '4', 'b5', '5', 'b6', '6', 'b7', '7'],
-};
 
 export type ExerciseId = "mark-degree" | "mark-degree-on-string";
 
@@ -42,11 +25,10 @@ export class Setup extends React.Component<Props> {
     };
 
     static getDefaultScale(): Scale {
-        return new Scale(
-            Note.fromName("A"),
-            scales['minor-pentatonic'].map(name => ScaleDegree.fromName(name)),
-            'minor-pentatonic',
-        );
+        return new Scale({
+            name: 'minor-pentatonic',
+            root: 'A',
+        });
     }
 
     private inputs = {
@@ -210,11 +192,10 @@ export class Setup extends React.Component<Props> {
 
     private onScaleChanged() {
         if (this.inputs.root.current && this.inputs.scale.current) {
-            this.props.onScaleChanged(new Scale(
-                Note.fromName(this.inputs.root.current.value),
-                scales[(this.inputs.scale.current.value)].map(name => ScaleDegree.fromName(name)),
-                this.inputs.scale.current.value,
-            ));
+            this.props.onScaleChanged(new Scale({
+                name: this.inputs.scale.current.value,
+                root: this.inputs.root.current.value,
+            }));
         }
     }
 
