@@ -135,6 +135,8 @@ export class Fretboard extends React.PureComponent<Props, State> {
         const patternContent = this.props.pattern && this.props.pattern.getPosition(position);
         const noteSize = openNote ? style.openNoteSize : style.noteSize;
 
+        let noteStyle: { [index: string]: string | number | undefined } = {};
+
         let contentStyle: { [index: string]: string | number | undefined } = {
             top: style.stringSpacing / 2 - noteSize / 2,
             width: noteSize,
@@ -144,7 +146,9 @@ export class Fretboard extends React.PureComponent<Props, State> {
         };
 
         if (openNote) {
-            contentStyle.left = -noteSize;
+            noteStyle.width = noteSize;
+            noteStyle.height = style.stringSpacing;
+            noteStyle.left = -noteSize;
         } else {
             contentStyle.left = this.state.fretSpacing / 2 - noteSize / 2;
         }
@@ -154,7 +158,7 @@ export class Fretboard extends React.PureComponent<Props, State> {
         }
 
         return (
-            <div className={openNote ? "open-note" : "note"} onClick={() => this.onClick(position)}>
+            <div className={openNote ? "open-note" : "note"} style={noteStyle} onClick={() => this.onClick(position)}>
                 {content && (
                     <div className="note-content" style={contentStyle}>
                         {this.props.settings.labels == "notes" ? content.note.name : content.degree.name}
