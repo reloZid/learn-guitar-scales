@@ -14,6 +14,7 @@ type Props = {
     fretboardSettings: FretboardSettings,
     scale: Scale,
     controller: ExerciseController,
+    onSetup: () => void,
 };
 
 type State = {
@@ -41,6 +42,9 @@ export class Exercise extends React.Component<Props, State> {
 
         return (
             <div id="exercise">
+                <button id="btn-setup" type="submit" className="btn btn-secondary" onClick={this.onSetup.bind(this)}>
+                    Setup
+                </button>
                 <Fretboard
                     settings={this.props.fretboardSettings}
                     data={this.state.selection}
@@ -49,7 +53,7 @@ export class Exercise extends React.Component<Props, State> {
                 />
                 <div className="card">
                     <div className="card-body">
-                        <h5 className="card-title">Drill</h5>
+                        <h5 className="card-title">Exercise</h5>
                         <div id="exercise-content">
                             <div id="exercise-text">
                                 {!this.state.wrongAnswer && this.state.question}
@@ -91,5 +95,9 @@ export class Exercise extends React.Component<Props, State> {
             this.setState({wrongAnswer: true});
             setTimeout(() => this.setState({wrongAnswer: false}), 1500);
         }
+    }
+
+    private onSetup() {
+        this.props.onSetup();
     }
 }

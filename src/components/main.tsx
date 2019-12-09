@@ -65,6 +65,7 @@ export class Main extends React.Component<{}, State> {
                     fretboardSettings={this.state.fretboardSettings}
                     scale={this.state.scale}
                     controller={controllerFactories[this.state.mode]()}
+                    onSetup={this.onSetup.bind(this)}
                 />
             );
 
@@ -83,6 +84,10 @@ export class Main extends React.Component<{}, State> {
 
     onStart(exercise: ExerciseId) {
         this.setState({mode: exercise});
+    }
+
+    onSetup() {
+        this.setState({mode: "setup"});
     }
 }
 
