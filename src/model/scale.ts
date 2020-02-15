@@ -2,10 +2,12 @@ import {Note} from "./note";
 import {ScaleDegree} from "./scale-degree";
 
 const scales: { [index: string]: string[] } = {
+    'root-fifth': ['1', '5'],
     'minor-pentatonic': ['1', 'b3', '4', '5', 'b7'],
     'major-pentatonic': ['1', '2', '3', '5', '6'],
     'minor-arpeggio': ['1', 'b3', '5'],
     'major-arpeggio': ['1', '3', '5'],
+    'dominant-arpeggio': ['1', '3', '5', 'b7'],
     'ionian': ['1', '2', '3', '4', '5', '6', '7'],
     'dorian': ['1', '2', 'b3', '4', '5', '6', 'b7'],
     'phrygian': ['1', 'b2', 'b3', '4', '5', 'b6', 'b7'],

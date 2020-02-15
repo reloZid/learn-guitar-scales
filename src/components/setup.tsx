@@ -66,8 +66,10 @@ export class Setup extends React.Component<Props> {
                                     ref={this.inputs.scale}
                                     value={this.props.scale.name}
                                     onChange={this.onScaleChanged.bind(this)}>
+                                <option value="root-fifth">Root + Fifths</option>
                                 <option value="major-arpeggio">Major Arpeggio</option>
                                 <option value="minor-arpeggio">Minor Arpeggio</option>
+                                <option value="dominant-arpeggio">Dominant Arpeggio</option>
                                 <option value="major-pentatonic">Major Pentatonic</option>
                                 <option value="minor-pentatonic">Minor Pentatonic</option>
                                 <option value="ionian">Ionian</option>
