@@ -14,7 +14,7 @@ const style = {
         'firebrick',
         'darkgreen',
         'limegreen',
-        'gold',
+        'goldenrod',
         'skyblue',
         'darkblue',
         'purple',
