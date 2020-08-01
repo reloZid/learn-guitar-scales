@@ -64,16 +64,14 @@ export class Exercise extends React.Component<Props, State> {
                                     <span className="wrong"><strong>Wrong!</strong> Try again.</span>
                                 )}
                             </div>
-                            {!this.state.wrongAnswer && (
-                                <div id="exercise-buttons">
-                                    <button type="submit" className="btn btn-secondary" onClick={this.onSetup.bind(this)}>
-                                        Setup
-                                    </button>
-                                    <button type="submit" className="btn btn-primary" onClick={this.onNext.bind(this)}>
-                                        Next
-                                    </button>
-                                </div>
-                            )}
+                            <div id="exercise-buttons">
+                                <button type="submit" className="btn btn-secondary" onClick={this.onSetup.bind(this)}>
+                                    Setup
+                                </button>
+                                <button type="submit" className="btn btn-primary" onClick={this.onNext.bind(this)}>
+                                    Next
+                                </button>
+                            </div>
                         </div>
                     </div>
                 </div>
