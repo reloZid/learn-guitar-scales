@@ -49,10 +49,10 @@ export class FretboardData {
     setPosition(position: FretboardPosition, noteOrDegree: Note | ScaleDegree) {
         this.data = this.data.filter(item => !equal(item.position, position));
         if (noteOrDegree instanceof Note) {
-            const content = {note: noteOrDegree, degree: this.scale.degree(noteOrDegree)};
+            const content = {note: noteOrDegree, degree: this.scale.degreeFromNote(noteOrDegree)};
             this.data.push({position, content});
         } else {
-            const content = {degree: noteOrDegree, note: this.scale.note(noteOrDegree)};
+            const content = {degree: noteOrDegree, note: this.scale.noteFromDegree(noteOrDegree)};
             this.data.push({position, content});
         }
     }
@@ -85,7 +85,7 @@ export class FretboardData {
         for (const position of FretboardData.getPositions()) {
             const note = this.getNote(position);
 
-            if (this.scale.contains(note)) {
+            if (this.scale.containsNote(note)) {
                 this.setPosition(position, note);
             }
         }
@@ -131,7 +131,7 @@ export class FretboardData {
 
     private getNote(position: FretboardPosition) {
         let openNote = Note.fromName(tuning[position.string]);
-        return Note.fromValue((openNote.value + position.fret) % 12, this.scale);
+        return this.scale.noteFromValue((openNote.value + position.fret) % 12);
     }
 
     private static getPositions(): FretboardPosition[] {

@@ -1,5 +1,6 @@
 import React from "react";
 import {Fretboard, FretboardSettings} from "./fretboard";
+import {Note} from "../model/note";
 import {Scale} from "../model/scale";
 import {FretboardData} from "../model/fretboard-data";
 
@@ -25,10 +26,7 @@ export class Setup extends React.Component<Props> {
     };
 
     static getDefaultScale(): Scale {
-        return new Scale({
-            name: 'minor-pentatonic',
-            root: 'A',
-        });
+        return new Scale(Note.fromName('A'), 'minor-pentatonic');
     }
 
     private inputs = {
@@ -194,10 +192,10 @@ export class Setup extends React.Component<Props> {
 
     private onScaleChanged() {
         if (this.inputs.root.current && this.inputs.scale.current) {
-            this.props.onScaleChanged(new Scale({
-                name: this.inputs.scale.current.value,
-                root: this.inputs.root.current.value,
-            }));
+            this.props.onScaleChanged(new Scale(
+                Note.fromName(this.inputs.root.current.value),
+                this.inputs.scale.current.value
+            ));
         }
     }
 

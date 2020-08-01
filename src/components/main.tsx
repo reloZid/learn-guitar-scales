@@ -6,14 +6,16 @@ import "../style.css"
 import React from "react";
 import ReactDOM from "react-dom";
 import {FretboardSettings} from "./fretboard";
-import {Scale, ScaleSettings} from "../model/scale";
+import {Scale} from "../model/scale";
 import {ExerciseId, Setup} from "./setup";
 import {Exercise, ExerciseController} from "./exercise";
 import {MarkDegreeOnStringExercise} from "../exercises/mark-degree-on-string-exercise";
 import {MarkDegreeExercise} from "../exercises/mark-degree-exercise";
+import {Note} from "../model/note";
 
 type SerializableState = {
-    scaleSettings: ScaleSettings,
+    scaleRootName: string,
+    scaleName: string,
     fretboardSettings: FretboardSettings,
 }
 
@@ -88,7 +90,8 @@ export class Main extends React.Component<{}, State> {
 
     private saveState() {
         const state: SerializableState = {
-            scaleSettings: this.state.scale.settings,
+            scaleName: this.state.scale.name,
+            scaleRootName: this.state.scale.root.name,
             fretboardSettings: this.state.fretboardSettings,
         };
 
@@ -101,7 +104,7 @@ export class Main extends React.Component<{}, State> {
 
             this.state = {
                 mode: 'setup',
-                scale: new Scale(state.scaleSettings),
+                scale: new Scale(Note.fromName(state.scaleRootName), state.scaleName),
                 fretboardSettings: state.fretboardSettings,
             }
         } catch (e) {

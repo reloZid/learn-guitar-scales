@@ -18,54 +18,87 @@ const scales: { [index: string]: string[] } = {
     'chromatic': ['1', 'b2', '2', 'b3', '3', '4', 'b5', '5', 'b6', '6', 'b7', '7'],
 };
 
-export interface ScaleSettings {
-    name: string,
-    root: string,
-}
-
 export class Scale {
-    readonly name: string;
     readonly root: Note;
-    readonly degrees: ScaleDegree[];
+    readonly name: string;
     readonly notes: Note[];
+    readonly degrees: ScaleDegree[];
 
-    constructor(settings: ScaleSettings) {
-        this.name = settings.name;
-        this.root = Note.fromName(settings.root);
-
-        this.degrees = scales[settings.name].map(name => ScaleDegree.fromName(name));
-        this.notes = this.degrees.map(degree => this.note(degree));
-    }
-
-    note(degree: ScaleDegree): Note {
-        return Note.fromValue((this.root.value + degree.value) % 12, this);
-    }
-
-    degree(note: Note): ScaleDegree {
-        let value = (note.value - this.root.value) % 12;
-        if (value < 0) {
-            value += 12;
+    constructor(root: Note, name: string) {
+        if (scales[name] === undefined) {
+            throw new TypeError("Invalid scale name!");
         }
-        return ScaleDegree.fromValue(value, this);
+
+        this.root = root;
+        this.name = name;
+
+        this.degrees = scales[name].map(degreeName => ScaleDegree.fromName(degreeName));
+        this.notes = this.degrees.map(degree => this.noteFromDegree(degree));
     }
 
-    contains(note: Note): boolean;
-    contains(degree: ScaleDegree): boolean;
-    contains(noteOrDegree: Note|ScaleDegree): boolean {
-        if (noteOrDegree instanceof Note) {
-            const note = noteOrDegree;
-            return this.notes.some(item => item.value === note.value);
-        }
-        else {
-            const degree = noteOrDegree;
-            return this.degrees.some(item => item.value === degree.value);
-        }
+    containsNote(note: Note): boolean {
+        return this.notes.some(item => item.value === note.value);
     }
 
-    get settings(): ScaleSettings {
-        return {
-            name: this.name,
-            root: this.root.name,
+    containsDegree(degree: ScaleDegree): boolean {
+        return this.degrees.some(item => item.value === degree.value);
+    }
+
+    noteFromDegree(degree: ScaleDegree): Note {
+        const noteValue = (this.root.value + degree.value) % 12;
+        return this.noteFromValue(noteValue);
+    }
+
+    degreeFromNote(note: Note): ScaleDegree {
+        let degreeValue = (note.value - this.root.value) % 12;
+
+        if (degreeValue < 0) {
+            degreeValue += 12;
+        }
+
+        return this.degreeFromValue(degreeValue);
+    }
+
+    degreeFromValue(value: number): ScaleDegree {
+        // try to use the same name as in the scale
+        for (const scaleDegree of this.degrees) {
+            if (scaleDegree.value === value) {
+                return scaleDegree;
+            }
+        }
+
+        // otherwise use default name
+        const defaultNames: { [index: number]: string } = {
+            0: '1', 1: 'b2', 2: '2', 3: 'b3', 4: '3', 5: '4', 6: 'b5', 7: '5', 8: 'b6', 9: '6', 10: 'b7', 11: '7'
         };
+
+        return ScaleDegree.fromName(defaultNames[value]);
+    }
+
+    noteFromValue(value: number): Note {
+        let scaleDegreeValue =  value - this.root.value;
+
+        if (scaleDegreeValue < 0) {
+            scaleDegreeValue += 12;
+        }
+
+        const scaleDegree = this.degreeFromValue(scaleDegreeValue);
+
+        const noteNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
+        const rootNameIndex = noteNames.indexOf(this.root.name.charAt(0));
+        const nameOffset = parseInt(scaleDegree.naturalDegree.name) - 1;
+        const naturalNoteName = noteNames[(rootNameIndex + nameOffset) % 7];
+
+        let naturalNoteValue = Note.fromName(naturalNoteName).value;
+
+        if (naturalNoteValue > value) {
+            naturalNoteValue -= 12;
+        }
+
+        const sharps = value - naturalNoteValue;
+        const flats = naturalNoteValue - value + 12;
+        const noteModifier = sharps < flats ? '#'.repeat(sharps) : 'b'.repeat(flats);
+
+        return Note.fromName(naturalNoteName + noteModifier);
     }
 }

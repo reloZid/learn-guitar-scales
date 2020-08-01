@@ -1,28 +1,4 @@
-import {Scale} from "./scale";
-
 export class ScaleDegree {
-
-    static fromValue(value: number, scale?: Scale): ScaleDegree {
-        if (value < 0 || value > 11) {
-            throw new TypeError('Invalid scale degree value!');
-        }
-
-        // try to use the same name as in the scale
-        if (scale) {
-            for (const scaleDegree of scale.degrees) {
-                if (scaleDegree.value === value) {
-                    return scaleDegree;
-                }
-            }
-        }
-
-        // otherwise use default name
-        const defaultNames: { [index: number]: string } = {
-            0: '1', 1: 'b2', 2: '2', 3: 'b3', 4: '3', 5: '4', 6: 'b5', 7: '5', 8: 'b6', 9: '6', 10: 'b7', 11: '7'
-        };
-        return new ScaleDegree(defaultNames[value]);
-    }
-
     static fromName(name: string): ScaleDegree {
         return new ScaleDegree(name);
     }
@@ -51,7 +27,7 @@ export class ScaleDegree {
         this.name = name;
     }
 
-    get value() {
+    get value(): number {
         const degreeValues: { [index: string]: number } = {'1': 0, '2': 2, '3': 4, '4': 5, '5': 7, '6': 9, '7': 11};
         const degreeModifiers: { [index: string]: number } = {'': 0, 'b': -1, 'bb': -2, '#': 1, '##': 2};
 
@@ -61,7 +37,11 @@ export class ScaleDegree {
         return degreeValue + degreeModifier;
     }
 
-    get text() {
+    get naturalDegree(): ScaleDegree {
+        return ScaleDegree.fromName(this.name.charAt(this.name.length - 1));
+    }
+
+    get text(): string {
         if (this.name == '1') {
             return 'root';
         }
