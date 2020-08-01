@@ -40,6 +40,6 @@ button {
     margin-left: 1em;
 }
 
-#setup-fretboard {
-    margin-bottom: 1em;
+#setup-fretboard, #setup-exercise {
+    margin-bottom: 1.5em;
 }
