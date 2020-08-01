@@ -94,7 +94,10 @@ button {
     color: #dc3545;
 }
 
-#btn-setup {
-    margin-top: 1em;
+#exercise-buttons button {
+    margin-left: 1em;
 }
 
+#setup-fretboard {
+    margin-bottom: 1em;
+}

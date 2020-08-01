@@ -48,9 +48,6 @@ export class Exercise extends React.Component<Props, State> {
 
         return (
             <div id="exercise">
-                <button id="btn-setup" type="submit" className="btn btn-secondary" onClick={this.onSetup.bind(this)}>
-                    Setup
-                </button>
                 <Fretboard
                     settings={this.props.fretboardSettings}
                     data={this.state.selection}
@@ -69,8 +66,11 @@ export class Exercise extends React.Component<Props, State> {
                             </div>
                             {!this.state.wrongAnswer && (
                                 <div id="exercise-buttons">
-                                    <button type="submit" className="btn btn-primary"
-                                            onClick={this.onNext.bind(this)}>Next
+                                    <button type="submit" className="btn btn-secondary" onClick={this.onSetup.bind(this)}>
+                                        Setup
+                                    </button>
+                                    <button type="submit" className="btn btn-primary" onClick={this.onNext.bind(this)}>
+                                        Next
                                     </button>
                                 </div>
                             )}

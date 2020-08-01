@@ -44,19 +44,10 @@ export class Setup extends React.Component<Props> {
         const rootNoteOptions = ['C', 'G', 'D', 'A', 'E', 'B', 'F#', 'C#', 'F', 'Bb', 'Eb', 'Ab', 'Db', 'Gb', 'Cb'];
         const fretOptions = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12, 13, 14, 15];
 
-        const form = (
+        const fretboardForm = (
             <form>
                 <div className="row">
                     <div className="col-md-6">
-                        <div className="form-group">
-                            <label htmlFor="select-exercise">Exercise</label>
-                            <select className="form-control"
-                                    id="select-exercise"
-                                    ref={this.inputs.exercise}>
-                                <option value="mark-degree">Mark Degree</option>
-                                <option value="mark-degree-on-string">Mark Degree On String</option>
-                            </select>
-                        </div>
                         <div className="form-group">
                             <label htmlFor="select-scale">Scale</label>
                             <select className="form-control"
@@ -90,6 +81,29 @@ export class Setup extends React.Component<Props> {
                                 {rootNoteOptions.map(value => <option key={value}>{value}</option>)}
                             </select>
                         </div>
+                        <div className="form-group">
+                            <label>Options</label>
+                            <div className="form-check">
+                                <input type="checkbox"
+                                       className="form-check-input"
+                                       id="check-open-strings"
+                                       ref={this.inputs.openStrings}
+                                       checked={this.props.fretboardSettings.openStrings}
+                                       onChange={this.onFretboardSettingsChanged.bind(this)}/>
+                                <label className="form-check-label" htmlFor="check-open-strings">Show Open
+                                    Strings</label>
+                            </div>
+                            <div className="form-check">
+                                <input type="checkbox"
+                                       className="form-check-input"
+                                       id="check-show-degrees"
+                                       ref={this.inputs.showDegrees}
+                                       checked={this.props.fretboardSettings.labels === "scale-degrees"}
+                                       onChange={this.onFretboardSettingsChanged.bind(this)}/>
+                                <label className="form-check-label" htmlFor="check-show-degrees">Show Scale
+                                    Degrees</label>
+                            </div>
+                        </div>
                     </div>
                     <div className="col-md-6">
                         <div className="form-group">
@@ -112,28 +126,30 @@ export class Setup extends React.Component<Props> {
                                 {fretOptions.map(value => <option key={value}>{value}</option>)}
                             </select>
                         </div>
+                    </div>
+                </div>
+            </form>
+        );
+
+        const exerciseForm = (
+            <form>
+                <div className="row">
+                    <div className="col-md-6">
+                        <div className="form-group">
+                            <label htmlFor="select-exercise">Exercise</label>
+                            <select className="form-control"
+                                    id="select-exercise"
+                                    ref={this.inputs.exercise}>
+                                <option value="mark-degree">Mark Degree</option>
+                                <option value="mark-degree-on-string">Mark Degree On String</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div className="row">
+                    <div className="col-md-6">
                         <div className="form-group">
                             <label>Options</label>
-                            <div className="form-check">
-                                <input type="checkbox"
-                                       className="form-check-input"
-                                       id="check-open-strings"
-                                       ref={this.inputs.openStrings}
-                                       checked={this.props.fretboardSettings.openStrings}
-                                       onChange={this.onFretboardSettingsChanged.bind(this)}/>
-                                <label className="form-check-label" htmlFor="check-open-strings">Include Open
-                                    Strings</label>
-                            </div>
-                            <div className="form-check">
-                                <input type="checkbox"
-                                       className="form-check-input"
-                                       id="check-show-degrees"
-                                       ref={this.inputs.showDegrees}
-                                       checked={this.props.fretboardSettings.labels === "scale-degrees"}
-                                       onChange={this.onFretboardSettingsChanged.bind(this)}/>
-                                <label className="form-check-label" htmlFor="check-show-degrees">Show Scale
-                                    Degrees</label>
-                            </div>
                             <div className="form-check">
                                 <input type="checkbox"
                                        className="form-check-input"
@@ -146,6 +162,8 @@ export class Setup extends React.Component<Props> {
                             </div>
                         </div>
                     </div>
+                </div>
+                <div className="row">
                     <div className="col-md-6">
                         <button type="submit" className="btn btn-primary" id="button-start"
                                 onClick={this.onStart.bind(this)}>
@@ -171,10 +189,17 @@ export class Setup extends React.Component<Props> {
                     data={fretboardData}
                 />
 
-                <div className="card">
+                <div id="setup-fretboard" className="card">
                     <div className="card-body">
-                        <h5 className="card-title">Setup</h5>
-                        {form}
+                        <h5 className="card-title">Fretboard</h5>
+                        {fretboardForm}
+                    </div>
+                </div>
+
+                <div id="setup-exercise" className="card">
+                    <div className="card-body">
+                        <h5 className="card-title">Exercise</h5>
+                        {exerciseForm}
                     </div>
                 </div>
             </div>
