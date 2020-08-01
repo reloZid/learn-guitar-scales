@@ -19,7 +19,7 @@ export class Note {
             const rootNameIndex = noteNames.indexOf(scale.root.name.charAt(0));
             const nameOffset = parseInt(scaleDegree.name.charAt(scaleDegree.name.length - 1)) - 1;
             const naturalNoteName = noteNames[(rootNameIndex + nameOffset) % 7];
-            let naturalNoteValue = Note.calcValue(naturalNoteName);
+            let naturalNoteValue = Note.fromName(naturalNoteName).value;
 
             if (naturalNoteValue > value) {
                 naturalNoteValue -= 12;
@@ -48,19 +48,12 @@ export class Note {
 
         const noteNames = ['C', 'D', 'E', 'F', 'G', 'A', 'B'];
         const noteModifiers = ['', 'b', 'bb', '#', '##'];
-        return noteNames.includes(name.charAt(0)) && noteModifiers.includes(name.substring(1));
-    }
 
-    private static calcValue(name: string): number {
-        const noteValues: { [index: string]: number } = {'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11};
-        const noteModifiers: { [index: string]: number } = {'': 0, 'b': -1, 'bb': -2, '#': 1, '##': 2};
-        const noteValue = noteValues[name.charAt(0)];
-        const noteModifier = noteModifiers[name.substring(1)];
-        return noteValue + noteModifier;
+        return noteNames.includes(name.charAt(0)) &&
+               noteModifiers.includes(name.substring(1));
     }
 
     readonly name: string;
-    readonly value: number;
 
     private constructor(name: string) {
         if (!Note.isNameValid(name)) {
@@ -68,6 +61,15 @@ export class Note {
         }
 
         this.name = name;
-        this.value = Note.calcValue(name);
+    }
+
+    get value(): number {
+        const noteValues: { [index: string]: number } = {'C': 0, 'D': 2, 'E': 4, 'F': 5, 'G': 7, 'A': 9, 'B': 11};
+        const noteModifiers: { [index: string]: number } = {'': 0, 'b': -1, 'bb': -2, '#': 1, '##': 2};
+
+        const noteValue = noteValues[this.name.charAt(0)];
+        const noteModifier = noteModifiers[this.name.substring(1)];
+
+        return noteValue + noteModifier;
     }
 }

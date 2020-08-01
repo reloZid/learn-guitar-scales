@@ -41,16 +41,7 @@ export class ScaleDegree {
         return degreeModifier.includes(name.substring(0, name.length - 1));
     }
 
-    private static calcValue(name: string): number {
-        const degreeValues: { [index: string]: number } = {'1': 0, '2': 2, '3': 4, '4': 5, '5': 7, '6': 9, '7': 11};
-        const degreeModifiers: { [index: string]: number } = {'': 0, 'b': -1, 'bb': -2, '#': 1, '##': 2};
-        const degreeValue = degreeValues[name.charAt(name.length - 1)];
-        const degreeModifier = degreeModifiers[name.substring(0, name.length - 1)];
-        return degreeValue + degreeModifier;
-    }
-
     readonly name: string;
-    readonly value: number;
 
     private constructor(name: string) {
         if (!ScaleDegree.isNameValid(name)) {
@@ -58,7 +49,16 @@ export class ScaleDegree {
         }
 
         this.name = name;
-        this.value = ScaleDegree.calcValue(name);
+    }
+
+    get value() {
+        const degreeValues: { [index: string]: number } = {'1': 0, '2': 2, '3': 4, '4': 5, '5': 7, '6': 9, '7': 11};
+        const degreeModifiers: { [index: string]: number } = {'': 0, 'b': -1, 'bb': -2, '#': 1, '##': 2};
+
+        const degreeValue = degreeValues[this.name.charAt(this.name.length - 1)];
+        const degreeModifier = degreeModifiers[this.name.substring(0, this.name.length - 1)];
+
+        return degreeValue + degreeModifier;
     }
 
     get text() {
