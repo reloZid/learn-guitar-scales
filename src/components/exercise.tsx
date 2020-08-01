@@ -3,11 +3,12 @@ import {Fretboard, FretboardSettings} from "./fretboard";
 import {Scale} from "../model/scale";
 import {FretboardData, FretboardPosition} from "../model/fretboard-data";
 import {ScaleDegree} from "../model/scale-degree";
+import {Note} from "../model/note";
 
 export interface ExerciseController {
     validateAnswer(selection: FretboardData): boolean
 
-    nextQuestion(): { question: string, degree: ScaleDegree }
+    nextQuestion(): { question: string, degree: ScaleDegree, note: Note }
 }
 
 type Props = {
@@ -21,6 +22,7 @@ type State = {
     selection: FretboardData,
     question: string,
     degree: ScaleDegree,
+    note: Note,
     wrongAnswer: boolean,
 };
 
@@ -30,15 +32,19 @@ export class Exercise extends React.Component<Props, State> {
 
         this.state = {
             wrongAnswer: false,
-            selection: new FretboardData(this.props.scale),
+            selection: new FretboardData(),
             ...this.props.controller.nextQuestion(),
         };
     }
 
     render() {
-        const pattern = new FretboardData(this.props.scale);
-        pattern.setScale();
-        pattern.clip(this.props.fretboardSettings);
+        const pattern = new FretboardData();
+        pattern.setScale(this.props.scale);
+        pattern.clip(
+            this.props.fretboardSettings.firstFret,
+            this.props.fretboardSettings.lastFret,
+            this.props.fretboardSettings.openStrings
+        );
 
         return (
             <div id="exercise">
@@ -77,10 +83,10 @@ export class Exercise extends React.Component<Props, State> {
 
     private onClickNote(position: FretboardPosition) {
         const newSelection = this.state.selection.clone();
-        if (this.state.selection.getPosition(position)) {
-            newSelection.clearPosition(position);
+        if (this.state.selection.getContent(position)) {
+            newSelection.clearContent(position);
         } else {
-            newSelection.setPosition(position, this.state.degree);
+            newSelection.setContent(position, {degree: this.state.degree, note: this.state.note});
         }
         this.setState({selection: newSelection});
     }
@@ -88,7 +94,7 @@ export class Exercise extends React.Component<Props, State> {
     private onNext() {
         if (this.props.controller.validateAnswer(this.state.selection)) {
             this.setState({
-                selection: new FretboardData(this.props.scale),
+                selection: new FretboardData(),
                 ...this.props.controller.nextQuestion()
             });
         } else {

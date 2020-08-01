@@ -156,8 +156,8 @@ export class Fretboard extends React.PureComponent<Props, State> {
     }
 
     private renderNoteContent(position: FretboardPosition) {
-        const content = this.props.data.getPosition(position);
-        const pattern = !content && this.props.settings.pattern && this.props.pattern && this.props.pattern.getPosition(position) !== undefined;
+        const content = this.props.data.getContent(position);
+        const pattern = !content && this.props.settings.pattern && this.props.pattern && this.props.pattern.getContent(position) !== undefined;
 
         if (!content && !pattern) {
             return [];

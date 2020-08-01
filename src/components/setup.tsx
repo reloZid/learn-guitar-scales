@@ -156,9 +156,13 @@ export class Setup extends React.Component<Props> {
             </form>
         );
 
-        const fretboardData = new FretboardData(this.props.scale);
-        fretboardData.setScale();
-        fretboardData.clip(this.props.fretboardSettings);
+        const fretboardData = new FretboardData();
+        fretboardData.setScale(this.props.scale);
+        fretboardData.clip(
+            this.props.fretboardSettings.firstFret,
+            this.props.fretboardSettings.lastFret,
+            this.props.fretboardSettings.openStrings
+        );
 
         return (
             <div id="setup">

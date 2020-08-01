@@ -3,6 +3,7 @@ import {FretboardSettings} from "../components/fretboard";
 import {Scale} from "../model/scale";
 import {ScaleDegree} from "../model/scale-degree";
 import {FretboardData} from "../model/fretboard-data";
+import {Note} from "../model/note";
 
 export class MarkDegreeOnStringExercise implements ExerciseController {
     private readonly fretboardSettings: FretboardSettings;
@@ -18,17 +19,21 @@ export class MarkDegreeOnStringExercise implements ExerciseController {
         this.currentDegree = this.scale.degrees[0];
     }
 
-    nextQuestion(): { question: string; degree: ScaleDegree } {
+    nextQuestion(): { question: string; degree: ScaleDegree; note: Note } {
         const availableDegreesOnStrings = [];
         for (let string = 0; string < FretboardData.getStringCount(); string++) {
             if (string === this.currentString) {
                 continue;
             }
 
-            const data = new FretboardData(this.scale);
-            data.setScale();
-            data.clip(this.fretboardSettings);
+            const data = new FretboardData();
+            data.setScale(this.scale);
             data.filter(position => position.string === string);
+            data.clip(
+                this.fretboardSettings.firstFret,
+                this.fretboardSettings.lastFret,
+                this.fretboardSettings.openStrings
+            );
 
             if (!data.isEmpty()) {
                 availableDegreesOnStrings.push({string, degrees: data.map((_position, content) => content.degree)});
@@ -45,14 +50,19 @@ export class MarkDegreeOnStringExercise implements ExerciseController {
         return {
             question: `In the key of ${this.scale.root.name}, where do you find the ${this.currentDegree.text} on the ${stringName} string?`,
             degree: this.currentDegree,
+            note: this.scale.noteFromDegree(this.currentDegree),
         };
     }
 
     validateAnswer(selection: FretboardData): boolean {
-        const correct = new FretboardData(this.scale);
-        correct.setNote(this.scale.noteFromDegree(this.currentDegree));
-        correct.clip(this.fretboardSettings);
+        const correct = new FretboardData();
+        correct.setDegree(this.currentDegree, this.scale);
         correct.filter(position => position.string === this.currentString);
+        correct.clip(
+            this.fretboardSettings.firstFret,
+            this.fretboardSettings.lastFret,
+            this.fretboardSettings.openStrings
+        );
 
         return selection.equals(correct);
     }

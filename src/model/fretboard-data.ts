@@ -1,7 +1,6 @@
 import {ScaleDegree} from "./scale-degree";
 import {Note} from "./note";
 import {Scale} from "./scale";
-import {FretboardSettings} from "../components/fretboard";
 
 const tuning = ['E', 'B', 'G', 'D', 'A', 'E'];
 
@@ -28,14 +27,9 @@ export class FretboardData {
         return 24;
     }
 
-    private readonly scale: Scale;
     private data: { position: FretboardPosition, content: FretboardContent }[] = [];
 
-    constructor(scale: Scale) {
-        this.scale = scale;
-    }
-
-    getPosition(position: FretboardPosition): FretboardContent | undefined {
+    getContent(position: FretboardPosition): FretboardContent | undefined {
         for (const item of this.data) {
             if (equal(item.position, position)) {
                 return item.content;
@@ -44,49 +38,45 @@ export class FretboardData {
         return undefined;
     }
 
-    setPosition(position: FretboardPosition, note: Note): void;
-    setPosition(position: FretboardPosition, degree: ScaleDegree): void;
-    setPosition(position: FretboardPosition, noteOrDegree: Note | ScaleDegree) {
+    setContent(position: FretboardPosition, content: FretboardContent) {
         this.data = this.data.filter(item => !equal(item.position, position));
-        if (noteOrDegree instanceof Note) {
-            const content = {note: noteOrDegree, degree: this.scale.degreeFromNote(noteOrDegree)};
-            this.data.push({position, content});
-        } else {
-            const content = {degree: noteOrDegree, note: this.scale.noteFromDegree(noteOrDegree)};
-            this.data.push({position, content});
-        }
+        this.data.push({position, content});
     }
 
-    clearPosition(position: FretboardPosition) {
+    clearContent(position: FretboardPosition) {
         this.data = this.data.filter(item => !equal(item.position, position));
     }
 
-    clip(settings: FretboardSettings) {
+    clip(firstFret: number, lastFret: number, openStrings: boolean) {
         this.data = this.data.filter(item => {
             if (item.position.fret === 0) {
-                return settings.openStrings;
+                return openStrings;
             } else {
-                return item.position.fret >= settings.firstFret && item.position.fret <= settings.lastFret;
+                return item.position.fret >= firstFret && item.position.fret <= lastFret;
             }
         });
     }
 
-    setNote(note: Note) {
-        for (const position of FretboardData.getPositions()) {
-            const currentNote = this.getNote(position);
+    setNote(note: Note, scale: Scale) {
+        for (const position of FretboardData.getAllPositions()) {
+            const currentNote = FretboardData.getNote(position, scale);
 
             if (currentNote.value === note.value) {
-                this.setPosition(position, note);
+                this.setContent(position, {note, degree: scale.degreeFromNote(note)});
             }
         }
     }
 
-    setScale() {
-        for (const position of FretboardData.getPositions()) {
-            const note = this.getNote(position);
+    setDegree(degree: ScaleDegree, scale: Scale) {
+        this.setNote(scale.noteFromDegree(degree), scale);
+    }
 
-            if (this.scale.containsNote(note)) {
-                this.setPosition(position, note);
+    setScale(scale: Scale) {
+        for (const position of FretboardData.getAllPositions()) {
+            const note = FretboardData.getNote(position, scale);
+
+            if (scale.containsNote(note)) {
+                this.setContent(position, {note, degree: scale.degreeFromNote(note)});
             }
         }
     }
@@ -97,7 +87,7 @@ export class FretboardData {
         }
 
         for (const item of this.data) {
-            const otherContent = other.getPosition(item.position);
+            const otherContent = other.getContent(item.position);
 
             if (!otherContent) {
                 return false;
@@ -124,17 +114,17 @@ export class FretboardData {
     }
 
     clone(): FretboardData {
-        const clone = new FretboardData(this.scale);
+        const clone = new FretboardData();
         clone.data = this.data.slice();
         return clone;
     }
 
-    private getNote(position: FretboardPosition) {
+    private static getNote(position: FretboardPosition, scale: Scale) {
         let openNote = Note.fromName(tuning[position.string]);
-        return this.scale.noteFromValue((openNote.value + position.fret) % 12);
+        return scale.noteFromValue((openNote.value + position.fret) % 12);
     }
 
-    private static getPositions(): FretboardPosition[] {
+    private static getAllPositions(): FretboardPosition[] {
         let positions = [];
         for (let string = 0; string < FretboardData.getStringCount(); string++) {
             for (let fret = 0; fret <= FretboardData.getFretCount(); fret++) {
