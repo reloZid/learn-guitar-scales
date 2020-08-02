@@ -9,6 +9,7 @@ const style = {
     noteSize: 40,
     openNoteSize: 35,
     topMargin: 30,
+    fretWidth: 4,
     scaleDegreeColors: [
         'black',
         'darkred',
@@ -67,7 +68,7 @@ export class Fretboard extends React.PureComponent<Props, State> {
     render() {
         const canvasStyle = {
             width: '100%',
-            height: style.stringSpacing * FretboardData.getStringCount() + 40,
+            height: style.stringSpacing * FretboardData.getStringCount() + style.topMargin,
         };
 
         return (
@@ -107,12 +108,12 @@ export class Fretboard extends React.PureComponent<Props, State> {
         }
 
         const fretCount = this.props.settings.lastFret - this.props.settings.firstFret + 1;
-        let fretSpacing = containerWidth / fretCount;
+        let fretSpacing = (containerWidth - style.fretWidth) / fretCount;
         let additionalFrets = 0;
 
         while (fretSpacing > style.maxFretSpacing) {
             additionalFrets++;
-            fretSpacing = containerWidth / (fretCount + additionalFrets);
+            fretSpacing = (containerWidth - style.fretWidth) / (fretCount + additionalFrets);
         }
 
         let firstVisibleFret = this.props.settings.firstFret - Math.floor(additionalFrets / 2);
@@ -171,9 +172,16 @@ export class Fretboard extends React.PureComponent<Props, State> {
         ctx.fillRect(0, 0, fretboardWidth, fretboardHeight);
 
         // frets
-        ctx.fillStyle = 'gray';
-        for (let i = 0; i <= this.state.lastVisibleFret - this.state.firstVisibleFret; i++) {
-            ctx.fillRect(i * this.state.fretSpacing, 0, 3, fretboardHeight);
+        for (let i = 0; i <= this.state.lastVisibleFret - this.state.firstVisibleFret + 1; i++) {
+            const fret = this.state.firstVisibleFret + i;
+
+            if (fret === this.props.settings.firstFret || fret === this.props.settings.lastFret + 1) {
+                ctx.fillStyle = 'black';
+            } else {
+                ctx.fillStyle = 'gray';
+            }
+
+            ctx.fillRect(i * this.state.fretSpacing, 0, 4, fretboardHeight);
         }
 
         // markers
