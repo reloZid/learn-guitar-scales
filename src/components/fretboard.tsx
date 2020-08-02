@@ -43,7 +43,8 @@ type Props = {
 
 type State = {
     fretSpacing: number,
-    additionalFrets: number,
+    firstVisibleFret: number,
+    lastVisibleFret: number,
 }
 
 export class Fretboard extends React.PureComponent<Props, State> {
@@ -55,7 +56,8 @@ export class Fretboard extends React.PureComponent<Props, State> {
 
         this.state = {
             fretSpacing: 0,
-            additionalFrets: 0,
+            firstVisibleFret: 0,
+            lastVisibleFret: 0,
         };
 
         this.stringImage.src = 'data:image/gif;base64,R0lGODdhAgAIAOMQAB0aFSUfDyooKTUxJkA6Gk9EJFlPLFRRSGtnZnNpUHRvXIF3bY+Ifp6Xh7Gunby4rywAAAAAAgAIAAAEDHAERV5xpiW20BFABAA7';
@@ -113,9 +115,18 @@ export class Fretboard extends React.PureComponent<Props, State> {
             fretSpacing = containerWidth / (fretCount + additionalFrets);
         }
 
+        let firstVisibleFret = this.props.settings.firstFret - Math.floor(additionalFrets / 2);
+        let lastVisibleFret = this.props.settings.lastFret + Math.ceil(additionalFrets / 2);
+
+        while (firstVisibleFret < 1) {
+            firstVisibleFret++;
+            lastVisibleFret++;
+        }
+
         this.setState({
             fretSpacing,
-            additionalFrets,
+            firstVisibleFret,
+            lastVisibleFret,
         });
     }
 
@@ -141,24 +152,19 @@ export class Fretboard extends React.PureComponent<Props, State> {
 
         this.drawFretboard(ctx);
 
-        let firstFret = this.props.settings.firstFret - Math.floor(this.state.additionalFrets / 2);
-        let lastFret = this.props.settings.lastFret + Math.ceil(this.state.additionalFrets / 2);
-
         for (let string = 0; string < FretboardData.getStringCount(); string++) {
             if (this.props.settings.openStrings) {
                 this.drawPosition(ctx, {fret: 0, string});
             }
-            for (let fret = firstFret; fret <= lastFret; fret++) {
+            for (let fret = this.state.firstVisibleFret; fret <= this.state.lastVisibleFret; fret++) {
                 this.drawPosition(ctx, {fret, string});
             }
         }
     }
 
     private drawFretboard(ctx: CanvasRenderingContext2D) {
-        let firstFret = this.props.settings.firstFret - Math.floor(this.state.additionalFrets / 2);
-        let lastFret = this.props.settings.lastFret + Math.ceil(this.state.additionalFrets / 2);
-        let fretboardWidth = (lastFret - firstFret + 1) * this.state.fretSpacing;
-        let fretboardHeight = style.stringSpacing * FretboardData.getStringCount();
+        const fretboardWidth = (this.state.lastVisibleFret - this.state.firstVisibleFret + 1) * this.state.fretSpacing;
+        const fretboardHeight = style.stringSpacing * FretboardData.getStringCount();
 
         // background
         ctx.fillStyle = 'bisque';
@@ -166,13 +172,13 @@ export class Fretboard extends React.PureComponent<Props, State> {
 
         // frets
         ctx.fillStyle = 'gray';
-        for (let i = 0; i <= lastFret - firstFret; i++) {
+        for (let i = 0; i <= this.state.lastVisibleFret - this.state.firstVisibleFret; i++) {
             ctx.fillRect(i * this.state.fretSpacing, 0, 3, fretboardHeight);
         }
 
         // markers
-        for (let i = 0; i <= lastFret - firstFret; i++) {
-            let fret = firstFret + i;
+        for (let i = 0; i <= this.state.lastVisibleFret - this.state.firstVisibleFret; i++) {
+            let fret = this.state.firstVisibleFret + i;
             let drawMarkerText = false;
             let x = (i + 0.5) * this.state.fretSpacing;
 
@@ -212,22 +218,34 @@ export class Fretboard extends React.PureComponent<Props, State> {
         const content = this.props.data.getContent(position);
         const pattern = this.props.pattern && this.props.pattern.getContent(position) !== undefined;
 
-        if (content) {
-            this.drawContent(ctx, position, content);
-        } else if (pattern) {
-            this.drawPattern(ctx, position);
+        if (!content && !pattern) {
+            return;
         }
-    }
 
-    private drawContent(ctx: CanvasRenderingContext2D, position: FretboardPosition, content: FretboardContent) {
         ctx.save();
-        ctx.fillStyle = style.scaleDegreeColors[content.degree.value];
 
         if (position.fret === 0) {
             ctx.translate(-0.5 * style.openNoteSize + 2, (position.string + 0.5) * style.stringSpacing);
+        } else {
+            const visibleFretIndex = position.fret - this.state.firstVisibleFret;
+            ctx.translate((visibleFretIndex + 0.5) * this.state.fretSpacing, (position.string + 0.5) * style.stringSpacing);
+        }
+
+        if (content) {
+            this.drawContent(ctx, position, content);
+        } else {
+            this.drawPattern(ctx, position);
+        }
+
+        ctx.restore();
+    }
+
+    private drawContent(ctx: CanvasRenderingContext2D, position: FretboardPosition, content: FretboardContent) {
+        ctx.fillStyle = style.scaleDegreeColors[content.degree.value];
+
+        if (position.fret === 0) {
             fillCircle(ctx, 0, 0, style.openNoteSize / 2);
         } else {
-            ctx.translate((position.fret - 0.5) * this.state.fretSpacing, (position.string + 0.5) * style.stringSpacing);
             fillCircle(ctx, 0, 0, style.noteSize / 2);
         }
 
@@ -242,8 +260,6 @@ export class Fretboard extends React.PureComponent<Props, State> {
         if (this.props.settings.labels === "scale-degrees") {
             ctx.fillText(content.degree.name, 0, 8);
         }
-
-        ctx.restore();
     }
 
     private drawPattern(ctx: CanvasRenderingContext2D, position: FretboardPosition) {
@@ -251,19 +267,14 @@ export class Fretboard extends React.PureComponent<Props, State> {
             return;
         }
 
-        ctx.save();
         ctx.strokeStyle = 'black';
         ctx.lineWidth = 2;
 
         if (position.fret === 0) {
-            ctx.translate(-0.5 * style.openNoteSize + 2, (position.string + 0.5) * style.stringSpacing);
             strokeCircle(ctx, 0, 0, style.openNoteSize / 2);
         } else {
-            ctx.translate((position.fret - 0.5) * this.state.fretSpacing, (position.string + 0.5) * style.stringSpacing);
             strokeCircle(ctx, 0, 0, style.noteSize / 2);
         }
-
-        ctx.restore();
     }
 
     private onClick(x: number, y: number) {
@@ -282,18 +293,14 @@ export class Fretboard extends React.PureComponent<Props, State> {
         }
 
         const string = Math.floor(y / style.stringSpacing);
-        const fret = Math.ceil(x / this.state.fretSpacing);
 
         if (string < 0 || string >= FretboardData.getStringCount()) {
             return;
         }
 
-        const openStringClicked = fret === 0 && this.props.settings.openStrings;
-        const validFretClicked = fret >= this.props.settings.firstFret && fret <= this.props.settings.lastFret;
-
-        if (!openStringClicked && !validFretClicked) {
-            return;
-        }
+        const fretIndex = Math.floor(x / this.state.fretSpacing);
+        const openStringClicked = fretIndex < 0 && this.props.settings.openStrings;
+        const fret = openStringClicked ? 0 : this.state.firstVisibleFret + fretIndex;
 
         this.props.onClick({fret,  string});
     }
