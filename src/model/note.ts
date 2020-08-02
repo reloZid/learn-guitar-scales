@@ -32,6 +32,12 @@ export class Note {
         const noteValue = noteValues[this.name.charAt(0)];
         const noteModifier = noteModifiers[this.name.substring(1)];
 
-        return noteValue + noteModifier;
+        let totalValue = noteValue + noteModifier;
+
+        if (totalValue < 0) {
+            totalValue += 12;
+        }
+
+        return totalValue;
     }
 }
