@@ -19,6 +19,10 @@ export class MarkDegreeOnStringExercise implements ExerciseController {
         this.currentDegree = this.scale.degrees[0];
     }
 
+    get name(): string {
+        return "Mark Degree On String";
+    }
+
     nextQuestion(): { question: string; degree: ScaleDegree; note: Note } {
         const availableDegreesOnStrings = [];
         for (let string = 0; string < FretboardData.getStringCount(); string++) {

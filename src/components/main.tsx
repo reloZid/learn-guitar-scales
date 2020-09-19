@@ -7,11 +7,12 @@ import React from "react";
 import ReactDOM from "react-dom";
 import {FretboardSettings} from "./fretboard";
 import {Scale} from "../model/scale";
-import {ExerciseId, Setup} from "./setup";
+import {Setup} from "./setup";
 import {Exercise, ExerciseController} from "./exercise";
 import {MarkDegreeOnStringExercise} from "../exercises/mark-degree-on-string-exercise";
 import {MarkDegreeExercise} from "../exercises/mark-degree-exercise";
 import {Note} from "../model/note";
+import {MarkNoteExercise} from "../exercises/mark-note-exercise";
 
 type SerializableState = {
     scaleRootName: string,
@@ -20,7 +21,7 @@ type SerializableState = {
 }
 
 type State = {
-    mode: 'setup' | ExerciseId,
+    mode: string,
     scale: Scale,
     fretboardSettings: FretboardSettings,
 }
@@ -41,26 +42,29 @@ export class Main extends React.Component<{}, State> {
     }
 
     private renderContent() {
+        const controllers: {[index: string]: ExerciseController} = {
+            "mark-degree": new MarkDegreeExercise(this.state.fretboardSettings, this.state.scale),
+            "mark-degree-on-string": new MarkDegreeOnStringExercise(this.state.fretboardSettings, this.state.scale),
+            "mark-note": new MarkNoteExercise(this.state.fretboardSettings, this.state.scale),
+        };
+
         if (this.state.mode === "setup") {
             return (
                 <Setup
                     fretboardSettings={this.state.fretboardSettings}
                     scale={this.state.scale}
+                    controllers={controllers}
                     onFretboardSettingsChanged={this.onFretboardSettingsChanged.bind(this)}
                     onScaleChanged={this.onScaleChanged.bind(this)}
                     onStart={this.onStart.bind(this)}
                 />
             );
         } else {
-            const controllerFactories: {[index: string]: () => ExerciseController} = {
-                "mark-degree": () => new MarkDegreeExercise(this.state.fretboardSettings, this.state.scale),
-                "mark-degree-on-string": () => new MarkDegreeOnStringExercise(this.state.fretboardSettings, this.state.scale),
-            };
             return (
                 <Exercise
                     fretboardSettings={this.state.fretboardSettings}
                     scale={this.state.scale}
-                    controller={controllerFactories[this.state.mode]()}
+                    controller={controllers[this.state.mode]}
                     onSetup={this.onSetup.bind(this)}
                 />
             );
@@ -80,7 +84,7 @@ export class Main extends React.Component<{}, State> {
         this.setState({scale});
     }
 
-    private onStart(exercise: ExerciseId) {
+    private onStart(exercise: string) {
         this.setState({mode: exercise});
     }
 

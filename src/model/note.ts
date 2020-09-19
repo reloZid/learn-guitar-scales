@@ -40,4 +40,11 @@ export class Note {
 
         return totalValue;
     }
+
+    get text(): string {
+        return this.name
+            .replace('b', '\u266D')
+            .replace('#', '\u266F');
+    }
+
 }

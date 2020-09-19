@@ -3,15 +3,15 @@ import {Fretboard, FretboardSettings} from "./fretboard";
 import {Note} from "../model/note";
 import {Scale} from "../model/scale";
 import {FretboardData} from "../model/fretboard-data";
-
-export type ExerciseId = "mark-degree" | "mark-degree-on-string";
+import {ExerciseController} from "./exercise";
 
 type Props = {
     fretboardSettings: FretboardSettings,
     onFretboardSettingsChanged: (fretboardSettings: FretboardSettings) => void,
     scale: Scale,
+    controllers: {[index: string]: ExerciseController},
     onScaleChanged: (scale: Scale) => void,
-    onStart: (exercise: ExerciseId) => void,
+    onStart: (exercise: string) => void,
 }
 
 export class Setup extends React.Component<Props> {
@@ -140,8 +140,9 @@ export class Setup extends React.Component<Props> {
                             <select className="form-control"
                                     id="select-exercise"
                                     ref={this.inputs.exercise}>
-                                <option value="mark-degree">Mark Degree</option>
-                                <option value="mark-degree-on-string">Mark Degree On String</option>
+                                {Object.keys(this.props.controllers).map(key =>
+                                    <option key={key} value={key}>{this.props.controllers[key].name}</option>
+                                )}
                             </select>
                         </div>
                     </div>
@@ -230,7 +231,7 @@ export class Setup extends React.Component<Props> {
 
     private onStart() {
         if (this.inputs.exercise.current) {
-            this.props.onStart(this.inputs.exercise.current.value as ExerciseId);
+            this.props.onStart(this.inputs.exercise.current.value);
         }
     }
 }

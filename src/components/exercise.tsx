@@ -6,6 +6,8 @@ import {ScaleDegree} from "../model/scale-degree";
 import {Note} from "../model/note";
 
 export interface ExerciseController {
+    readonly name: string
+
     validateAnswer(selection: FretboardData): boolean
 
     nextQuestion(): { question: string, degree: ScaleDegree, note: Note }
